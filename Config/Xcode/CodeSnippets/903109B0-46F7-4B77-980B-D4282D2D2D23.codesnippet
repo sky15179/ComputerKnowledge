@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string>initView</string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>ClassImplementation</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>#pragma lazy
+
+#pragma mark - lifeCycle
+
+#pragma mark - private api
+//初始化
+- (void)setup
+{
+    
+}
+
+//获取数据
+- (void)loadData
+{
+    
+}
+
+#pragma mark - public api
+//刷新视图
+- (void)resetSubViews
+{
+    
+}
+
+#pragma mark - property
+</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>903109B0-46F7-4B77-980B-D4282D2D2D23</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Objective-C</string>
+	<key>IDECodeSnippetTitle</key>
+	<string>初始化一个view</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>

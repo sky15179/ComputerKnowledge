@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string>initFSVc</string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>ClassImplementation</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>#pragma mark - lazy
+
+#pragma mark - lifeCycle
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self setup];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self loadData];
+}
+
+#pragma mark customApi
+#pragma mark - overWrite
+- (void)toucheTopBarLeftButton
+{
+    if (self.navigationController.viewControllers.count &gt; 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark nativeApi
+#pragma mark - tableViewDataSource
+
+#pragma mark - tableViewDelegate
+
+
+#pragma mark - privateMethod
+- (void)setup
+{
+    [self.topBar setCenterTitle:&lt;#name#&gt;];
+    [self.topBar setLeftButtonImage:[UIImage imageNamed:@"back"]];
+}
+
+- (void)loadData
+{
+    
+}
+
+#pragma mark - publicMethod
+
+#pragma mark - property</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>61345817-64A9-4CDE-89CC-F409CB28AF06</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Objective-C</string>
+	<key>IDECodeSnippetSummary</key>
+	<string>initFSVc</string>
+	<key>IDECodeSnippetTitle</key>
+	<string>newbase初始化</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>

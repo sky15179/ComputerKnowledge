@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string>initViewController</string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>ClassImplementation</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>#pragma lazy
+
+#pragma mark - lifeCycle
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    //初始化
+    [self setup];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //获取数据
+    [self loadData];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    //刷新视图
+    [self resetSubViews];
+}
+
+#pragma mark - private api
+//初始化
+- (void)setup
+{
+
+}
+
+//获取数据
+- (void)loadData
+{
+
+}
+
+//刷新视图
+- (void)resetSubViews
+{
+
+}
+#pragma mark - public api
+
+#pragma mark - appleDelegate
+
+#pragma mark - customDelegate
+
+#pragma mark - property
+
+</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>1CB04367-3683-42EA-B7E5-9E6EA0D434B4</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Objective-C</string>
+	<key>IDECodeSnippetTitle</key>
+	<string>初始化VC控制器</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>
