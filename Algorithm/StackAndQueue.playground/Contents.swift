@@ -7,40 +7,51 @@ import UIKit
 //队列， 循环队列，阻塞队列，并发队列，优先队列
 //循环队列
 class MyCircularQueue {
+    private var arr: [Int]
+    private var front = 0
+    private var rear = 0
+    private var capacity: Int = 0
 
     /** Initialize your data structure here. Set the size of the queue to be k. */
     init(_ k: Int) {
-        
+        arr = Array(repeating: 0, count: k)
+        capacity = k
     }
     
     /** Insert an element into the circular queue. Return true if the operation is successful. */
     func enQueue(_ value: Int) -> Bool {
-        
+        if isFull() { return false }
+        arr[rear] = value
+        rear = (rear + 1) % capacity
+        return true
     }
     
     /** Delete an element from the circular queue. Return true if the operation is successful. */
     func deQueue() -> Bool {
-        
+        if isEmpty() { return false }
+        arr[front] = 0
+        front = (front + 1) % capacity
+        return true
     }
     
     /** Get the front item from the queue. */
     func Front() -> Int {
-        
+        return arr[self.front]
     }
     
     /** Get the last item from the queue. */
     func Rear() -> Int {
-        
+        return self.arr[self.rear]
     }
     
     /** Checks whether the circular queue is empty or not. */
     func isEmpty() -> Bool {
-        
+       return front == rear
     }
     
     /** Checks whether the circular queue is full or not. */
     func isFull() -> Bool {
-        
+        return (rear + 1 ) % capacity == self.front
     }
 }
 
