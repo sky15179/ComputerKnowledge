@@ -1,6 +1,195 @@
 //: A UIKit based Playground for presenting user interface
-  
+
 import UIKit
+
+//分治：分而治之，拆分为不重复子问题，子问题求解，合并结果（合并函数是关键，直接影响分治的效率)，分治解决思路是自下向上解决合并问题
+//要求：子问题不重复，有最小解
+//实际应用：归并排序，快排算吗？
+//问题1：求出数组的有序或逆序对个数, 有序和逆序解决思路相似
+//思路：数组分成n1 + n2, n1的逆序个数k1, n2的逆序个数 k2, n1和n2之间的逆序个数k3，结果 = k1 + k2 + k3。 分解成最小单位，再次合并的时候统计结果，
+func reversePairs(_ nums: [Int]) -> Int {
+    guard nums.count > 1 else { return 0 }
+    var result = 0
+    
+    //分解
+    func mergeSort2(arr: [Int]) -> [Int] {
+        guard arr.count > 1 else { return arr }
+        let mid = arr.count / 2
+        let larr = mergeSort2(arr: Array(arr[0..<mid]))
+        let rarr = mergeSort2(arr: Array(arr[mid..<arr.count]))
+        return merge(leftArr: larr, rightArr: rarr)
+    }
+    
+    //合并
+    func merge(leftArr: [Int], rightArr: [Int]) -> [Int] {
+        var i = 0
+        var j = 0
+        var resultArr: [Int] = []
+        
+        while i < leftArr.count && j < rightArr.count {
+            if leftArr[i] <= rightArr[j] {
+                resultArr.append(leftArr[i])
+                i += 1
+            } else {
+                //记录逆序对，当右数组元素大于左数组元素, 左边中剩下都是逆序对的
+                result += leftArr.count - i
+                resultArr.append(rightArr[j])
+                j += 1
+            }
+        }
+        
+        while i < leftArr.count {
+            resultArr.append(leftArr[i])
+            i += 1
+        }
+        
+        while j < rightArr.count {
+            resultArr.append(rightArr[j])
+            j += 1
+        }
+        return resultArr
+    }
+    
+    _ = mergeSort2(arr: nums)
+    
+    return result
+}
+
+//问题2：二维平面上有 n 个点，如何快速计算出两个距离最近的点对
+//思路:
+
+//问题3：有两个 n*n 的矩阵 A，B，如何快速求解两个矩阵的乘积 C=A*B
+//思路：
+
+//分治在处理海量数据的应用
+//google的大数据应用：maoReduce
+//分治的思考：
+
+
+//回溯
+//问题：八皇后
+//最终结果存储的列数,行数自然是由0-7
+
+var result = Array(repeating: -1, count: 8)
+
+
+func isOk(_ row: Int, _ col: Int) -> Bool {
+    var leftup = col - 1
+    var rightup = col + 1
+    for i in (0...(row-1)).reversed() {
+        if result[i] == col {
+            return false
+        }
+
+        if leftup > 0, result[i] == leftup {
+            return false
+        }
+
+        if rightup < 8, result[i] == rightup {
+            return false
+        }
+
+        leftup -= 1
+        rightup += 1
+    }
+    return true
+}
+
+func printQueues() {
+    for i in 0...8 {
+        for j in 0...8 {
+            if result [i] == j {
+                print("Q")
+            } else {
+                print("*")
+            }
+        }
+    }
+}
+
+//letcode：八皇后
+class Solution {
+    private var strResult: [[String]] = []
+    private var colsResult: [Int] = []
+    private var max = 0
+    func solveNQueens(_ n: Int) -> [[String]] {
+        if n == 0 { return [] }
+        if n == 1 { return [["Q"]] }
+        max = n
+        colsResult = Array(repeating: 0, count: max)
+        callQueue(0)
+        return strResult
+    }
+
+    func callQueue(_ row: Int) {
+        if row == max {
+            strResult = outPutResult()
+            return
+        }
+
+        for i in 0...max - 1 {
+            if isOk(row, i) {
+                colsResult[row] = i
+                callQueue(row + 1)
+            }
+        }
+    }
+
+    func isOk(_ row: Int, _ col: Int) -> Bool {
+        guard row > 0 else {
+            return true
+        }
+        var leftup = col - 1
+        var rightup = col + 1
+        for i in (0...(row - 1)).reversed() {
+            if colsResult[i] == col {
+                return false
+            }
+
+            if leftup >= 0 {
+                if leftup == colsResult[i] { return false}
+            }
+
+            if rightup < max {
+                if rightup == colsResult[i] { return false }
+            }
+
+            leftup -= 1
+            rightup += 1
+        }
+        return true
+    }
+
+    func outPutResult() -> [[String]] {
+        let cols = colsResult
+        var result: [[String]] = Array(repeating: Array(repeating: "", count: max), count: max)
+        for i in 0...max - 1 {
+            for j in 0...max - 1 {
+                if cols[i] == j {
+                    result[i][j] = "Q"
+                } else {
+                    result[i][j] = "."
+                }
+            }
+        }
+        return result
+    }
+}
+
+//所有解:所谓赋值1，2，3，4，跳过首位继续执行剩下的情况，最后的结果过滤掉空情况
+
+//0 - 1背包问题
+
+var bagMax = 10
+
+func getMax(items: [Int], cw: Int, i: Int, w: Int) {
+    if cw >= w || i == items.count { bagMax }
+    getMax(items: <#T##[Int]#>, cw: <#T##Int#>, i: <#T##Int#>, w: <#T##Int#>)
+}
+
+
+//正则表达式
+//回溯思考:
 
 //动态规划：记录所有叠加可能状态的map，根据map来求解
 //背包问题：对于一组不同重量、不可分割的物品，我们需要选择一些装入背包，在满足背包最大重量限制的前提下，背包中物品总重量的最大值是多少呢
@@ -19,24 +208,24 @@ func knapsack(weight: [Int],n: Int, w: Int) -> Int {
     if weight[0] <= w {
         statesMap[0][weight[0]] = true
     }
-    
+
     for i in 1...n { //剩余的所有的重量状态
         //不放入物品
         for j in 0...w {
             if statesMap[i - 1][j] { statesMap[i][j] = statesMap[i - 1][j] }
         }
-        
+
         //放入物品
         for j in 0...w - weight[i] {
             if statesMap[i - 1][j] { statesMap[i][j + weight[i]] = true }
         }
     }
-    
+
     //从最末的状态向前迭代找到第一个合适的结果
     for i in (0...w).reversed() {
         if statesMap[n-1][i] { return i }
     }
-    
+
     return 0
 }
 
@@ -48,19 +237,19 @@ func knapsack2(weight: [Int],n: Int, w: Int) -> Int {
     if weight[0] <= w {
         statesMap[weight[0]] = true
     }
-    
+
     for i in 1...n { //剩余的所有的重量状态
         //放入物品，这里逆序为了避免重复计算
         for j in (0...w - weight[i]).reversed() {
             if statesMap[j] { statesMap[j + weight[i]] = true }
         }
     }
-    
+
     //从最末的状态向前迭代找到第一个合适的结果
     for i in (0...w).reversed() {
         if statesMap[i] { return i }
     }
-    
+
     return 0
 }
 
@@ -72,13 +261,13 @@ func knapsack3(weight: [Int],n: Int, w: Int) -> Int {
     if weight[0] <= w {
         statesMap[0][weight[0]] = value[0]
     }
-    
+
     for i in 1...n { //剩余的所有的重量状态
         //不放入物品
         for j in 0...w {
             if statesMap[i - 1][j] >= 0 { statesMap[i][j] = statesMap[i - 1][j] }
         }
-        
+
         //放入物品
         for j in 0...w - weight[i] {
             if statesMap[i - 1][j] >= 0 {
@@ -89,7 +278,7 @@ func knapsack3(weight: [Int],n: Int, w: Int) -> Int {
             }
         }
     }
-    
+
     var max = -1
     for i in (0...w) {
         if statesMap[n-1][i] > max {
@@ -107,19 +296,19 @@ func double11advance(items: [Int], n: Int, w: Int) {
     if items[0] <= 3 * w {
         statesMap[0][items[0]] = true
     }
-        
+
     for i in 1...n {
         //不购买
         for j in 0...(3 * w) {
             if statesMap[i - 1][j] { statesMap[i][j] = statesMap[i - 1][j] }
         }
-        
+
         //购买
         for j in 0...(3 * w) - items[i] {
             if statesMap[i - 1][j] { statesMap[i][j + items[i]] = true }
         }
     }
-    
+
     var value = 0
     for j in w...(3 * w + 1) {
         value = j
@@ -205,7 +394,7 @@ func coinChange(_ coins: [Int], _ amount: Int) -> Int {
 //回溯法
 //背包问题，先找出递归树，优化，使用备忘录，优化递归
 func beibao(i: Int, cw: Int) {
-    
+
 }
 
 //问题：我们有一个数字序列包含 n 个不同的数字，如何求出这个序列中的最长递增子序列长度？比如 2, 9, 3, 6, 5, 1, 7 这样一组数字序列，它的最长递增子序列就是 2, 3, 5, 7，所以最长递增子序列的长度是 4。
@@ -215,31 +404,34 @@ func findLongestArr(_ items: [Int]) -> [Int] {
     //base
     if items.count == 0 { return [] }
     if items.count == 1 { return items }
-    
+
     var res: [Int] = []
-    
+
     return res
 }
 
 //动态规划
 
-func findNumberOfLIS(_ nums: [Int]) -> Int {
-    //两个状态（n: 存储的个数, ） 状态转移方程: f(n) = f
-    if nums.count <= 1 { return nums.count }
-    var dp: [Int] = Array(repeating: 1, count: n + 1)
-    var maxLength =
-    dp[0] = 0
-    
-    for i in 0...dp.count {
-        for j in i...dp.count
-            if
-            dp[i] = Swift.max(dp[i], 1 + dp[i - j])
-        }
-    }
-    return dp[n]
-}
+//func findNumberOfLIS(_ nums: [Int]) -> Int {
+//    //两个状态（n: 存储的个数, ） 状态转移方程: f(n) = f
+//    if nums.count <= 1 { return nums.count }
+//    var dp: [Int] = Array(repeating: 1, count: n + 1)
+//    var maxLength =
+//    dp[0] = 0
+//
+//    for i in 0...dp.count {
+//        for j in i...dp.count
+//            if
+//            dp[i] = Swift.max(dp[i], 1 + dp[i - j])
+//        }
+//    }
+//    return dp[n]
+//}
 
 //贪心
 
 //对比
 //1.动态规划记录了整个状态渐变过程，所以能快速得出最优解，还能反推出最优解的实际方案
+
+//贪心
+//问题：区间覆盖，分糖果
