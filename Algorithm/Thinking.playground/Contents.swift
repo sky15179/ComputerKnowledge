@@ -14,7 +14,7 @@ func reversePairs(_ nums: [Int]) -> Int {
     //分解
     func mergeSort2(arr: [Int]) -> [Int] {
         guard arr.count > 1 else { return arr }
-        let mid = arr.count / 2
+        let mid = arr.count >> 1
         let larr = mergeSort2(arr: Array(arr[0..<mid]))
         let rarr = mergeSort2(arr: Array(arr[mid..<arr.count]))
         return merge(leftArr: larr, rightArr: rarr)
@@ -56,58 +56,21 @@ func reversePairs(_ nums: [Int]) -> Int {
 }
 
 //问题2：二维平面上有 n 个点，如何快速计算出两个距离最近的点对
-//思路:
+//思路: 将二维根据x轴平分为d1,d2区域，d1中最短的线和d2中最短的线，再与d1点和d2点构成的最短线做对比
+//https://blog.csdn.net/qq_34732729/article/details/99866969
 
 //问题3：有两个 n*n 的矩阵 A，B，如何快速求解两个矩阵的乘积 C=A*B
-//思路：
+//思路：分治
 
 //分治在处理海量数据的应用
 //google的大数据应用：maoReduce
-//分治的思考：
-
+//分治的思考：分治解决的是超大量级解决问题的方式，可以用来做时间和空间之间的互相转换，但是注意分治是提升了并发解决问题的时间，但是合并函数的复杂度和鲁棒性直接决定了问题的解决质量，所以分治是种有限解决方案
 
 //回溯
 //问题：八皇后
 //最终结果存储的列数,行数自然是由0-7
 
-var result = Array(repeating: -1, count: 8)
-
-
-func isOk(_ row: Int, _ col: Int) -> Bool {
-    var leftup = col - 1
-    var rightup = col + 1
-    for i in (0...(row-1)).reversed() {
-        if result[i] == col {
-            return false
-        }
-
-        if leftup > 0, result[i] == leftup {
-            return false
-        }
-
-        if rightup < 8, result[i] == rightup {
-            return false
-        }
-
-        leftup -= 1
-        rightup += 1
-    }
-    return true
-}
-
-func printQueues() {
-    for i in 0...8 {
-        for j in 0...8 {
-            if result [i] == j {
-                print("Q")
-            } else {
-                print("*")
-            }
-        }
-    }
-}
-
-//letcode：八皇后
+//letcode：八皇后， n皇后
 class Solution {
     private var strResult: [[String]] = []
     private var colsResult: [Int] = []
@@ -179,17 +142,56 @@ class Solution {
 //所有解:所谓赋值1，2，3，4，跳过首位继续执行剩下的情况，最后的结果过滤掉空情况
 
 //0 - 1背包问题
-
-var bagMax = 10
+var bagMax = Int.min
 
 func getMax(items: [Int], cw: Int, i: Int, w: Int) {
-    if cw >= w || i == items.count { bagMax }
-    getMax(items: <#T##[Int]#>, cw: <#T##Int#>, i: <#T##Int#>, w: <#T##Int#>)
+    if cw == w || i == items.count {
+        if cw > bagMax {
+            bagMax = cw
+            return
+        }
+    }
+    getMax(items: items, cw: cw, i: i + 1, w: w)
+    if cw + items[i] <= w {
+        getMax(items: items, cw: cw + items[i], i: i + 1, w: w)
+    }
 }
+//备忘录优化
 
 
 //正则表达式
+
+//class Pattern {
+//    private var matched = false
+//    private var text = ""
+//
+//    init(text: String) {
+//        self.text = text
+//    }
+//
+//    func match(text: String) -> Bool{
+//        matched = false
+//        rmatch(text: text)
+//        return matched
+//    }
+//
+//    private func rmatch(text: String) {
+//        var i = 0
+//        if matched { return }
+//        guard text.count > 0 else { return }
+//        if text[i] == "*" {
+//            rmatch(text: text[i+1...text.count])
+//        } else if text[i] == "?" {
+//
+//        } else if text[i]  {
+//
+//        }
+//    }
+//}
+
 //回溯思考:
+
+
 
 //动态规划：记录所有叠加可能状态的map，根据map来求解
 //背包问题：对于一组不同重量、不可分割的物品，我们需要选择一些装入背包，在满足背包最大重量限制的前提下，背包中物品总重量的最大值是多少呢
