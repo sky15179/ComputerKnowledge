@@ -484,3 +484,93 @@ func findLongestArr(_ items: [Int]) -> Int {
 
 //贪心
 //问题：区间覆盖，分糖果
+
+
+//-------------------------------------------
+//n皇后
+func nQueues(n: Int) -> [[String]] {
+    var cols: [Int] = []
+    var res: [[String]] = []
+    
+    //n...n
+    func callQueue(row: Int) {
+        if row == n {
+            getQueuesResult()
+            return
+        }
+        
+        for j in 0...n - 1 {
+            if isOK(row: row, col: j) {
+                cols[row] = j
+                callQueue(row: row + 1)
+            }
+        }
+    }
+    
+    func isOK(row: Int, col: Int) -> Bool {
+        guard row > 0 else {
+            return true
+        }
+        var leftup = col - 1
+        var rightup = col + 1
+        for i in (0...(row - 1)).reversed() {
+            if cols[i] == col {
+                return false
+            }
+            
+            if leftup >= 0 {
+                if leftup == cols[i] {
+                    return false
+                }
+            }
+            
+            if rightup < 0 {
+                if rightup == cols[i] {
+                    return false
+                }
+            }
+            
+            leftup -= 1
+            rightup += 1
+        }
+        return true
+    }
+    
+    func getQueuesResult() {
+        var result: [[String]] = Array(repeating: Array(repeating: "", count: n), count: n)
+        for i in 0...n - 1 {
+            for j in 0...n - 1 {
+                if cols[i] == j {
+                    result[i][j] = "Q"
+                } else {
+                    result[i][j] = "."
+                }
+            }
+        }
+        res = result
+    }
+    
+    callQueue(row: 0)
+    return res
+}
+
+//0-1 背包：回溯解及其优化, 升级问题
+var bagMax2 = Int.min
+func getBagMax(items: [Int], cw: Int, w: Int, i: Int) -> Int {
+    if w == cw || i == items.count {
+        if w < bagMax2 {
+            return
+        }
+    }
+    
+    //不选
+    getBagMax(items: items, cw: cw, w: w, i: i + 1)
+    
+    //选
+    if (w + items[i]) <= cw {
+        getBagMax(items: items, cw: cw, w: w + items[i], i: i + 1)
+    }
+}
+
+
+//涂色问题
