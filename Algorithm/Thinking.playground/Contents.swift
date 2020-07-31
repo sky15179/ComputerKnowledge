@@ -292,6 +292,7 @@ func knapsack3(weight: [Int],n: Int, w: Int) -> Int {
 
 //问题：淘宝的“双十一”购物节有各种促销活动，比如“满 200 元减 50 元”。假设你女朋友的购物车中有 n 个（n>100）想买的商品，她希望从里面选几个，在凑够满减条件的前提下，让选出来的商品价格总和最大程度地接近满减条件（200 元），这样就可以极大限度地“薅羊毛”
 //items:商品价格， n:商品个数, 最大限制：满200
+//思考：如果需要找出最有解的实际执行方案就需要记录所有的状态，这时候得用状态表
 func double11advance(items: [Int], n: Int, w: Int) {
     var statesMap: [[Bool]] = Array(repeating: Array(repeating: false, count: 3 * w), count: n)
     statesMap[0][0] = true
@@ -316,7 +317,7 @@ func double11advance(items: [Int], n: Int, w: Int) {
         value = j
         if statesMap[n-1][j] { break } //得到满足条件的最小值
     }
-    if value == (3 * w + 1) { return }
+    if value == (3 * w + 1) { return } //无解
     for i in 1...n-1 {
         if value - items[i] >= 0 && statesMap[i - 1][value - items[i]] {
             print("\(items[i]) ") //购买
@@ -327,6 +328,30 @@ func double11advance(items: [Int], n: Int, w: Int) {
 }
 
 //问题：杨辉三角
+
+var sanjiao: [[Int]] = [[5], [7,8], [2,3,4], [4,9,6,1], [2,7,9,4,5]]
+var minPath = Int.max
+
+func getPath(s: [[Int]]) {
+    var dp: [[Int]] = []
+    dp[0][0] = s[0][0]
+    for i in 1...s.count {
+        for j in 0...s[i].count {
+            if j == 0 {
+                dp[i][j] = dp[i - 1][j] + dp[i][j]
+            } else if j == s[i].count - 1  {
+                dp[i][j] = dp[i - 1][j - 1] + dp[i][j]
+            } else {
+                dp[i][j] = min(dp[i - 1][j] , dp[i - 1][j - 1]) + dp[i][j]
+            }
+        }
+    }
+    for p in dp[dp.count - 1] {
+        if dp[dp.count - 1][p] < minPath {
+            minPath = dp[dp.count - 1][p]
+        }
+    }
+}
 
 //问题：二维数组最短路径, 状态转移链表，状态转移方程
 
@@ -393,6 +418,8 @@ func coinChange(_ coins: [Int], _ amount: Int) -> Int {
     return dp(n: amount)
 }
 
+
+
 //回溯法
 //背包问题，先找出递归树，优化，使用备忘录，优化递归
 func beibao(i: Int, cw: Int) {
@@ -400,15 +427,35 @@ func beibao(i: Int, cw: Int) {
 }
 
 //问题：我们有一个数字序列包含 n 个不同的数字，如何求出这个序列中的最长递增子序列长度？比如 2, 9, 3, 6, 5, 1, 7 这样一组数字序列，它的最长递增子序列就是 2, 3, 5, 7，所以最长递增子序列的长度是 4。
-//解法：动态规划，贪心
-//回溯
-func findLongestArr(_ items: [Int]) -> [Int] {
-    //base
-    if items.count == 0 { return [] }
-    if items.count == 1 { return items }
+//解法：动态规划
+//状态: 数组个数n，最大数量max(没构成一个数组和现有值对比), 根据i和后续对比来获取递增数组
+//状态表：由数组个数n，和最大值构成？
+//状态转移方程: fn = Max(f(n - 1)) + 1 || f(n - 1)
 
-    var res: [Int] = []
+func findLongestArr(_ items: [Int]) -> Int {
+    guard items.count > 1 else {
+        return items.count
+    }
+    var dp: [Int] = []
+    dp[0] = 1
+    
+    //状态转移方程
+    for i in 0...items.count {
+        var max = 0
+        for j in i...items.count {
+            if items[j] < items[i] {
+                if dp[i] > max { max = dp[i]}
+            }
+        }
+        dp[i] = max + 1
+    }
 
+    var res = 0
+    for i in (0...items.count) {
+        if dp[i] > res {
+            res = dp[i]
+        }
+    }
     return res
 }
 
