@@ -661,12 +661,165 @@ class MergeProlbems {
 class DynamicProblems {
     //0-1 背包
     //动态表
+    var bagMax: Int = 0
+    var cw = 0
+    var statesMap: [[Bool]] = []
+    var values = [3, 4, 8, 9, 6]
+    func setup(items: [Int], cw: Int) {
+        self.cw = cw
+        //状态表构成：背包重量维度和背包个数维度
+        statesMap = Array(repeating: Array(repeating: false, count: cw + 1), count: items.count)
+        let res = getBagMax(items: items, cw: cw)
+        if res > 0 {
+            print("没有最大值")
+        } else {
+            print("最大值是\(res)")
+        }
+    }
+    
     func getBagMax(items: [Int], cw: Int) -> Int {
+        //初始化状态表的初始维度：0行的情况
+        statesMap[0][0] = true
+        if items[0] <= cw {
+            statesMap[0][items[0]] = true
+        }
         
+        for i in 1...items.count {
+            //不放
+            for j in 0...(cw + 1) {
+                if statesMap[i - 1][j] { statesMap[i][j] = statesMap[i - 1][j] }
+            }
+            //放
+            for j in 0...(cw - items[i]) {
+                if statesMap[i - 1][j] {
+                    statesMap[i][j + items[i]] = statesMap[i - 1][j]
+                }
+            }
+        }
+        
+        var res = -1
+        //找最大值就要从后往前找
+        for i in (0...w).reversed() {
+            if statesMap[items.count - 1][i] {
+                res = i
+            }
+        }
+        return res
     }
     
     //动态转移方程
     func getBagMaxWithFn(items: [Int], cw: Int) -> Int {
+        //如果只是求最值的情况，不用记录所有的状态，只要记录最后一组的状态即可
+        var dp = Array(repeating: false, count: cw + 1)
+        dp[0] = true
+        if items[0] <= cw {
+            dp[items[0]] = true
+        }
         
+        for i in 1...items.count {
+            //放,注意这里因为不保存过往状态，需要从后往前计算
+            for j in (0...(cw - items[i])).reversed() {
+                if dp[j] {
+                    dp[j + items[i]] = true
+                }
+            }
+        }
+        
+        var res = -1
+        for i in 0...cw {
+            if dp[cw] { res = i }
+        }
+        return res
     }
+    
+    //背包升级问题：求最大价值
+    func getBagMaxValue(items: [Int], cw: Int) -> Int {
+        //初始化状态表的初始维度：0行的情况
+        var statesMap2: [[Int]] = []
+        statesMap2 = Array(repeating: Array(repeating: 0, count: cw + 1), count: items.count)
+        statesMap2[0][0] = values[0]
+        for i in 0...items.count {
+            for j in 0...(cw + 1) {
+                statesMap2[i][j] = -1
+            }
+        }
+        statesMap2[0][0] = 0
+        if items[0] <= w {
+            statesMap2[0][items[0]] = values[0]
+        }
+        
+        for i in 1...items.count {
+            //不放
+            for j in 0...(cw + 1) {
+                if statesMap2[i - 1][j] >= 0 {
+                    statesMap2[i][j] = statesMap2[i - 1][j]
+                }
+            }
+            //放
+            for j in 0...(cw - items[i]) {
+                if (statesMap2[i - 1][j] >= 0) {
+                    let v = statesMap2[i - 1][j] + values[i]
+                    if v > statesMap2[i][j + items[i]] {
+                        statesMap2[i][j + items[i]] = v
+                    }
+                }
+            }
+        }
+        
+        var maxValue = -1
+        //找最大值就要从后往前找
+        for i in 0...w {
+            if statesMap2[items.count - 1][i] > maxValue {
+                maxValue = statesMap2[items.count - 1][i]
+            }
+        }
+        return maxValue
+    }
+    
+    //最小路径和
+    
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        //每次能走的是向下或右， 动态规划，f(i, j) = min(f(i - 1, j), f(i, j - 1)) + grid[i][j]
+        //状态转移方程：f(i, j) = grid[i][j] + min(f(i-1, j), f (i，j)))
+        var dpArr: [[Int]] = Array(repeating: Array(repeating: 0, count: grid[0].count + 1), count: grid.count + 1)
+        dpArr[0][0] = grid[0][0]
+        var sum = grid[0][0]
+        for i in 1...grid.count {
+            sum += grid[0][i]
+            dpArr[0][i] = sum
+        }
+        sum = grid[0][0]
+        for j in  1...grid[0].count {
+            sum += grid[j][0]
+            dpArr[j][0] += sum
+        }
+        for i in 0...grid.count {
+            for j in 0...grid[0].count {
+                dpArr[i][j] = grid[i][j] + Swift.min(dpArr[i - 1][j], dpArr[i][j - 1])
+            }
+        }
+    
+        return dpArr[grid.count - 1][grid[0].count - 1]
+    }
+    
+    //两字符串最长公共子序列
+    
+    //数据序列的最长递增子序列
+    
+}
+
+//练习题
+class Practise {
+    
+    //正则表达式匹配
+    
+    //最小路径和
+    
+    //零钱兑换
+    
+    //买卖股票的最佳时机
+    
+    //乘积最大子序列
+    
+    //三角形最小路径和
 }
