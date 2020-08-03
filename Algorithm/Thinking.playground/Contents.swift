@@ -487,90 +487,186 @@ func findLongestArr(_ items: [Int]) -> Int {
 
 
 //-------------------------------------------
-//n皇后
-func nQueues(n: Int) -> [[String]] {
-    var cols: [Int] = []
-    var res: [[String]] = []
-    
-    //n...n
-    func callQueue(row: Int) {
-        if row == n {
-            getQueuesResult()
-            return
+
+class BackProblems {
+    //n皇后：回溯
+    func nQueues(n: Int) -> [[String]] {
+        var cols: [Int] = []
+        var res: [[String]] = []
+        
+        //n...n
+        func callQueue(row: Int) {
+            if row == n {
+                getQueuesResult()
+                return
+            }
+            
+            for j in 0...n - 1 {
+                if isOK(row: row, col: j) {
+                    cols[row] = j
+                    callQueue(row: row + 1)
+                }
+            }
         }
         
-        for j in 0...n - 1 {
-            if isOK(row: row, col: j) {
-                cols[row] = j
-                callQueue(row: row + 1)
+        func isOK(row: Int, col: Int) -> Bool {
+            guard row > 0 else {
+                return true
             }
-        }
-    }
-    
-    func isOK(row: Int, col: Int) -> Bool {
-        guard row > 0 else {
+            var leftup = col - 1
+            var rightup = col + 1
+            for i in (0...(row - 1)).reversed() {
+                if cols[i] == col {
+                    return false
+                }
+                
+                if leftup >= 0 {
+                    if leftup == cols[i] {
+                        return false
+                    }
+                }
+                
+                if rightup < 0 {
+                    if rightup == cols[i] {
+                        return false
+                    }
+                }
+                
+                leftup -= 1
+                rightup += 1
+            }
             return true
         }
-        var leftup = col - 1
-        var rightup = col + 1
-        for i in (0...(row - 1)).reversed() {
-            if cols[i] == col {
-                return false
-            }
-            
-            if leftup >= 0 {
-                if leftup == cols[i] {
-                    return false
+        
+        func getQueuesResult() {
+            var result: [[String]] = Array(repeating: Array(repeating: "", count: n), count: n)
+            for i in 0...n - 1 {
+                for j in 0...n - 1 {
+                    if cols[i] == j {
+                        result[i][j] = "Q"
+                    } else {
+                        result[i][j] = "."
+                    }
                 }
             }
-            
-            if rightup < 0 {
-                if rightup == cols[i] {
-                    return false
-                }
-            }
-            
-            leftup -= 1
-            rightup += 1
+            res = result
         }
-        return true
+        
+        callQueue(row: 0)
+        return res
+    }
+
+    //0-1 背包：回溯解及其优化, 升级问题
+    var bagMax2 = Int.min
+    
+    func getBagMax(items: [Int], cw: Int, w: Int, i: Int) {
+        if w == cw || i == items.count {
+            if w > bagMax2 {
+                bagMax2 = w
+                return
+            }
+        }
+        
+        //不选
+        getBagMax(items: items, cw: cw, w: w, i: i + 1)
+        
+        //选
+        if (w + items[i]) <= cw {
+            getBagMax(items: items, cw: cw, w: w + items[i], i: i + 1)
+        }
+    }
+
+    //优化: 备忘录
+    var cw: Int = 0
+    var w = 0
+    var i = 0
+    var mem: [[Bool]] = []
+    func setup(items: [Int], cw: Int) {
+        self.cw = cw
+        mem = Array(repeating: Array(repeating: false, count: items.count), count: cw)
+        getBagMaxWitMem(items: items)
     }
     
-    func getQueuesResult() {
-        var result: [[String]] = Array(repeating: Array(repeating: "", count: n), count: n)
-        for i in 0...n - 1 {
-            for j in 0...n - 1 {
-                if cols[i] == j {
-                    result[i][j] = "Q"
+    func getBagMaxWitMem(items: [Int]) {
+        if w == cw || i == items.count {
+            if w > bagMax2 {
+                bagMax2 = w
+                return
+            }
+        }
+        //避免重复计算
+        if mem[w][i] { return }
+        mem[w][i] = true
+        
+        //不选
+        getBagMax(items: items, cw: cw, w: w, i: i + 1)
+        
+        //选
+        if (w + items[i]) <= cw {
+            getBagMax(items: items, cw: cw, w: w + items[i], i: i + 1)
+        }
+    }
+}
+
+class MergeProlbems {
+    //求逆序对: 归并
+    //逆序对的结果是两两对比的，如果能知道单个数组元素和另一个有序数组元素的大小对比，就能直接得出和剩下元素的逆序,归并排序符合拆成最小逻辑并两两对比的需要，只需要记录逆序对的个数
+    //归并函数： 拆分，合并（合并函数是核心，直接决定复杂度和性能）
+    func findReveredPair(numbers: [Int]) -> Int {
+        var res = 0
+        func mergeSort(numbers: [Int]) -> [Int] {
+            let mid = numbers.count >> 1
+            let left = mergeSort(numbers: Array(numbers[0...mid]))
+            let right = mergeSort(numbers: Array(numbers[(mid + 1)...numbers.count]))
+            return merge(left: left, right: right)
+        }
+        
+        //对比逻辑在合并函数中
+        func merge(left: [Int], right: [Int]) -> [Int] {
+            var i = 0
+            var j = 0
+            var result: [Int] = []
+            while i < left.count && j < right.count {
+                if left[i] > right[j] {
+                    result.append(right[j])
+                    j += 1
+                    res += right.count - i
                 } else {
-                    result[i][j] = "."
+                    result.append(left[i])
+                    i += 1
                 }
             }
+            
+            while i < left.count {
+                result.append(left[i])
+                i += 1
+            }
+            
+            while j < right.count {
+                result.append(right[j])
+                j += 1
+            }
+            return result
         }
-        res = result
+        
+        mergeSort(numbers: numbers)
+        
+        return res
     }
     
-    callQueue(row: 0)
-    return res
+    //我想做的
+    //涂色问题
 }
 
-//0-1 背包：回溯解及其优化, 升级问题
-var bagMax2 = Int.min
-func getBagMax(items: [Int], cw: Int, w: Int, i: Int) -> Int {
-    if w == cw || i == items.count {
-        if w < bagMax2 {
-            return
-        }
+class DynamicProblems {
+    //0-1 背包
+    //动态表
+    func getBagMax(items: [Int], cw: Int) -> Int {
+        
     }
     
-    //不选
-    getBagMax(items: items, cw: cw, w: w, i: i + 1)
-    
-    //选
-    if (w + items[i]) <= cw {
-        getBagMax(items: items, cw: cw, w: w + items[i], i: i + 1)
+    //动态转移方程
+    func getBagMaxWithFn(items: [Int], cw: Int) -> Int {
+        
     }
 }
-
-
-//涂色问题
