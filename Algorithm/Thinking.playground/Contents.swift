@@ -781,28 +781,45 @@ class DynamicProblems {
     func minPathSum(_ grid: [[Int]]) -> Int {
         //每次能走的是向下或右， 动态规划，f(i, j) = min(f(i - 1, j), f(i, j - 1)) + grid[i][j]
         //状态转移方程：f(i, j) = grid[i][j] + min(f(i-1, j), f (i，j)))
-        var dpArr: [[Int]] = Array(repeating: Array(repeating: 0, count: grid[0].count + 1), count: grid.count + 1)
-        dpArr[0][0] = grid[0][0]
-        var sum = grid[0][0]
-        for i in 1...grid.count {
-            sum += grid[0][i]
-            dpArr[0][i] = sum
-        }
-        sum = grid[0][0]
-        for j in  1...grid[0].count {
-            sum += grid[j][0]
-            dpArr[j][0] += sum
-        }
-        for i in 0...grid.count {
-            for j in 0...grid[0].count {
-                dpArr[i][j] = grid[i][j] + Swift.min(dpArr[i - 1][j], dpArr[i][j - 1])
+        var dpArr: [[Int]] = grid
+        for i in 0...grid.count - 1 {
+            for j in 0...grid[0].count - 1 {
+                if i == 0 && j == 0 {
+                    continue
+                } else if i == 0 {
+                    dpArr[i][j] = grid[i][j - 1] + dpArr[i][j]
+                } else if j == 0 {
+                    dpArr[i][j] = grid[i - 1][j] + dpArr[i][j]
+                } else {
+                    dpArr[i][j] = grid[i][j] + Swift.min(dpArr[i - 1][j], dpArr[i][j - 1])
+                }
             }
         }
     
         return dpArr[grid.count - 1][grid[0].count - 1]
     }
+
     
     //两字符串最长公共子序列
+    
+    func longestCommonSubsequence(_ text1: String, _ text2: String) -> Int {
+        guard text1.count > 0 && text2.count > 0 else {
+            return 0
+        }
+        var dp: [[Int]] = Array(repeating: Array(repeating: 0, count: text2.count + 1), count: text1.count + 1)
+        //初始化
+        for i in 1...text1.count {
+            for j in 1...text2.count {
+                if text1[i - 1] == text2[j - 1] {
+                    dp[i][j] = dp[i-1][j-1] + 1
+                } else {
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+                }
+            }
+        }
+        
+        return dp[text1.count][text2.count]
+    }
     
     //数据序列的最长递增子序列
     
@@ -812,14 +829,183 @@ class DynamicProblems {
 class Practise {
     
     //正则表达式匹配
+    func isMatch(_ s: String, _ p: String) -> Bool {
+        //解题思路：多状态使用状态表
+        /* 状态转变情况
+         1. p[j] == s[i] : dp[i][j] = dp[i - 1][j - 1]
+         2. p[j] == "." : dp[i][j] = dp[i - 1][j - 1]
+         3. p[j] == "*":
+                        (1). p[j - 1] != s[i] : dp[i][j] = dp[i][j - 2]
+                        (2). p[j - 1] == s[i] || p[j - 1] == ".":
+                                                a.dp[i][j] = dp[i - 1][j]
+                                                b.dp[i][j] == s[i][j - 1]
+                                                c.dp[i][j] == s[i][j - 2]
+         */
+        //dp = d[i - 1][j - 1] + (si 对比 pj)
+        guard s.count > 0 && p.count > 0 else {
+            return false
+        }
+        //状态表
+        var dp: [[Bool]] = Array(repeating: Array(repeating: false, count: p.count + 1), count: s.count + 1)
+        //状态表初始化
+        dp[0][0] = true
+        
+        //状态表状态填充
+        for i in 1...s.count - 1 {
+            for j in 1...p.count - 1 {
+                if p[j - 1] == "." || p[j - 1] == s[i - 1] {
+                    dp[i][j] = dp[i - 1][j - 1]
+                }
+                if p[j - 1] == "*" {
+                    if p[j - 2] != s[i - 1] && p[j - 2] != "." {
+                        dp[i][j] = dp[i][j - 2]
+                    } else {
+                        dp[i][j] = dp[i][j - 1] || dp[i][j - 1] || dp[i][j - 2]
+                    }
+                }
+            }
+        }
+        return dp[s.count - 1][p.count - 1]
+    }
     
-    //最小路径和
+    //最小路径和: 每次选择都记录当前步数的最优解，最终状态方程一般由多个结果组合而成
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        //每次能走的是向下或右， 动态规划，f(i, j) = min(f(i - 1, j), f(i, j - 1)) + grid[i][j]
+        //状态转移方程：f(i, j) = grid[i][j] + min(f(i-1, j), f (i，j)))
+        var dpArr: [[Int]] = grid
+        for i in 0...grid.count - 1 {
+            for j in 0...grid[0].count - 1 {
+                if i == 0 && j == 0 {
+                    continue
+                } else if i == 0 {
+                    dpArr[i][j] = grid[i][j - 1] + dpArr[i][j]
+                } else if j == 0 {
+                    dpArr[i][j] = grid[i - 1][j] + dpArr[i][j]
+                } else {
+                    dpArr[i][j] = grid[i][j] + Swift.min(dpArr[i - 1][j], dpArr[i][j - 1])
+                }
+            }
+        }
+    
+        return dpArr[grid.count - 1][grid[0].count - 1]
+    }
     
     //零钱兑换
+    func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+        //记录最后满足结果的dp数组即可
+        //amount + 1是为了特殊处理amount = 0的情况和判断mount是否有效值的特殊哨兵处理，用来处理异常情况
+        var dp: [Int] = Array(repeating: amount + 1, count: amount + 1)
+        for i in 0...amount {
+            for coin in coins {
+                dp[i] = Swift.min(dp[i], dp[i - coin] + 1)
+            }
+        }
+        return dp[amount] == amount + 1 ? -1 : dp[amount]
+    }
     
     //买卖股票的最佳时机
+    func maxProfit(_ prices: [Int]) -> Int {
+        guard prices.count > 0 else { return 0}
+          //状态1：所有价格，状态2：剩下的价格
+          //求两状态差值，每次记录更大值
+          //使用状态数组即可
+          //最后的结果是选出dp数组中最大值
+          //到这步都是回溯的解决
+          //动态规划的优化：状态累计的方程是？
+          var dp: [Int] = Array(repeating: 0, count: prices.count + 1) //这里如果有价格为状态的情况需要特殊处理，可以通过 + 1 构建哨兵来排除特殊情况
+          for i in 0...prices.count - 1 {
+              for j in i...prices.count - 1 {
+                  if prices[j] - prices[i] > 0 {
+                      dp[i] = Swift.max(prices[j] - prices[i], dp[i])
+                  }
+              }
+          }
+          var maxValue = 0
+          for i in dp {
+              maxValue = Swift.max(i, maxValue)
+          }
+          return maxValue
+      }
+    
+    func maxProfit2(_ prices: [Int]) -> Int {
+        var maxValue = 0
+        var minPrice = Int.max
+        for price in prices {
+            if price < minPrice {
+                minPrice = price
+            } else if price - minPrice > maxValue {
+                maxValue = price - minPrice
+            }
+        }
+        return maxValue
+      }
     
     //乘积最大子序列
-    
+    func maxProduct(_ nums: [Int]) -> Int {
+        guard nums.count > 0 else { return 0 }
+        var max = Int.min
+        var imax = 1
+        var imin = 1
+        for num in nums {
+            if num < 0 {
+                (imax, imin) = (imin, imax)
+            }
+            imax = Swift.max(num, num * imax)
+            imin = Swift.min(num, num * imin)
+            max = Swift.max(imax, max)
+        }
+        return max
+    }
+
     //三角形最小路径和
+    func minimumTotal(_ triangle: [[Int]]) -> Int {
+        guard triangle.count > 0 else {
+            return 0 }
+        guard triangle.count > 1 else {
+            return triangle[0][0]
+        }
+        var dp: [[Int]] = triangle
+        for i in 1...triangle.count - 1 {
+            for j in 0...triangle[i].count - 1 {
+                if i == 0 && j == 0 {
+                    continue
+                } else if j == 0 {
+                    dp[i][j] = dp[i - 1][j]  + dp[i][j]
+                } else if j == triangle[i].count - 1 {
+                    dp[i][j] = dp[i - 1][j - 1]  + dp[i][j]
+                } else {
+                    dp[i][j] = Swift.min(dp[i - 1][j], dp[i - 1][j - 1]) + dp[i][j]
+                }
+            }
+        }
+        
+        var min = Int.max
+        for num in dp[dp.count - 1] {
+            if num < min {
+                min = num
+            }
+        }
+        return min
+    }
+}
+
+
+extension String {
+    
+    subscript(i: Int) -> String {
+        guard i >= 0 && i < count else { return "" }
+        return String(self[index(startIndex, offsetBy: i)])
+    }
+    
+    subscript(range: Range<Int>) -> String {
+        let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) ?? endIndex
+        let higherIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound, limitedBy: endIndex) ?? endIndex
+        return String(self[lowerIndex..<higherIndex])
+    }
+    
+    subscript(range: ClosedRange<Int>) -> String {
+        let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) ?? endIndex
+        let higherIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound + 1, limitedBy: endIndex) ?? endIndex
+        return String(self[lowerIndex..<higherIndex])
+    }
 }
