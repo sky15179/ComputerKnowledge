@@ -8,6 +8,18 @@
 
 import UIKit
 
+
+public class TreeNode {
+     public var val: Int
+     public var left: TreeNode?
+     public var right: TreeNode?
+     public init(_ val: Int) {
+         self.val = val
+         self.left = nil
+         self.right = nil
+     }
+}
+
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -17,11 +29,105 @@ class ViewController: UIViewController {
 //        print(Solution().coinChange([1], 1))
 //        print(Solution().maxProfit([7,1,5,3,6,4]))
 //    print(Solution().minimumTotal([[-10]]))
-        print(Solution().isMatch("aab", "c*a*b"))
+//        print(Solution().isMatch("aab", "c*a*b"))
+//        print(Solution().isSymmetric([1,2,2,3,4,4,3]))
+//        print(Solution().buildTree([3,9,20,15,7], [9,3,15,20,7]))
     }
 }
 
 class Solution {
+    
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        guard preorder.count > 0 && inorder.count > 0 else { return nil }
+        return helper(preorder, preStart: 0, preEnd: preorder.count - 1, inorder, inStart: 0, inEnd: inorder.count - 1)
+    }
+
+    func helper(_ preorder: [Int], preStart: Int, preEnd: Int, _ inorder: [Int], inStart: Int, inEnd: Int) -> TreeNode? {
+        if preStart == preEnd { return nil }
+        let root = TreeNode(preorder[preStart])
+        let inRoot = inorder.findIndex { $0 == preorder[preStart] }
+        guard let rinRoot = inRoot else { return nil }
+        let leftNums = rinRoot - inStart
+        root.left = helper(preorder, preStart: preStart + 1, preEnd:preStart + leftNums + 1, inorder, inStart: inStart, inEnd: rinRoot)
+        root.right = helper(preorder, preStart: preStart + leftNums + 1, preEnd:preEnd, inorder, inStart: rinRoot + 1, inEnd: inEnd)
+        return root
+    }
+    
+    
+    var path: [Int] = []
+
+    func hasPathSum(_ root: TreeNode?, _ sum: Int) -> Bool {
+        //分类：回溯，找出满足条件的第一个解然后退出
+        guard let root = root else { return false }
+        return backTrack(root, sum)
+    }
+
+    func backTrack(_ root: TreeNode?, _ sum: Int) -> Bool {
+        guard let root = root else { return false }
+        var newSum = sum
+        //选择
+        path.append(root.val)
+
+        //状态变化操作
+        newSum -=  root.val
+        //终止条件
+        if newSum == 0 && root.left == nil && root.right == nil {
+            return true
+        }
+        if backTrack(root.left, newSum) { return true }
+        if backTrack(root.right, newSum) { return true }
+        //撤销选择
+        path.removeLast()
+        return false
+    }
+    
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        guard root != nil else { return false }
+        let arr = bfs(root)
+        for nums in arr {
+            if !isReveredArray(nums) {
+                return false
+            }
+        }
+        return true
+    }
+
+    func bfs(_ root: TreeNode?) -> [[Int]] {
+        guard let root = root else { return [] }
+        var queue: [TreeNode] = []
+        var res: [[Int]] = []
+        queue.append(root)
+        while !queue.isEmpty {
+            let size = queue.count
+            var curArr: [Int] = []
+            for _ in 0..<size {
+                let r = queue.removeFirst()
+                curArr.append(r.val)
+                if let l = r.left {
+                    queue.append(l)
+                }
+                if let rn = r.right {
+                    queue.append(rn)
+                }
+            }
+            res.append(curArr)
+        }
+        return res
+    }
+
+    func isReveredArray(_ nums: [Int]) -> Bool {
+        var left = 0
+        var right = nums.count - 1
+        while left < right {
+            if left != right {
+                return false
+            }
+            left += 1
+            right -= 1
+        }
+        return true
+    }
+    
     func minimumTotal(_ triangle: [[Int]]) -> Int {
         guard triangle.count > 0 else {
             return 0 }
@@ -214,5 +320,17 @@ extension String {
         let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) ?? endIndex
         let higherIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound + 1, limitedBy: endIndex) ?? endIndex
         return String(self[lowerIndex..<higherIndex])
+    }
+}
+
+
+extension Array {
+    func findIndex(_ condition: (Element) -> Bool) -> Int? {
+        for (index, value) in self.enumerated() {
+            if condition(value) {
+                return index
+            }
+        }
+        return nil
     }
 }

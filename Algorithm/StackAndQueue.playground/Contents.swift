@@ -141,5 +141,119 @@ class Heap {
     }
 }
 
-//图: 邻接表，邻接矩阵
-//图的一些操作：
+//栈实现浏览器
+
+class Browser {
+    typealias Page = Int
+    
+    private let forwardStack = Stack1()
+    private let backStack = Stack1()
+    
+    
+    init() {
+        
+    }
+    
+    func back() {
+        
+    }
+    
+    func forward(_ next: Page) {
+        back
+    }
+}
+
+//顺序栈，链栈：本质就是线性表上加上约束操作，表面暴露出来的就是ADT的约束方法
+//链表的核心约束操作依赖于他的核心特性先进后出FIFO：栈顶的push和pop操作
+//差异在于：操作的效率和内存构成上的差异（就是链表和数组的差异），数组需要扩容设计，链表占用更多内存
+
+protocol StackAble {
+    func push(_ value: Int)
+    func pop() -> Int?
+}
+
+//顺序
+class Stack1: StackAble {
+    private var arr: [Int] = []
+    init() {
+        
+    }
+    
+    func push(_ value: Int) {
+        arr.append(value)
+    }
+    
+    func pop() -> Int? {
+        arr.popLast()
+    }
+}
+
+//链
+class Stack2: StackAble {
+    private var link = LinkList()
+    
+    init() {
+        
+    }
+    
+    func push(_ value: Int) {
+        link.insert(value)
+    }
+    
+    func pop() -> Int? {
+        let res = link.tail
+        if let res = res {
+            link.remove(res)
+        }
+        return res?.value
+    }
+}
+
+//线性表ADT: 增删改查， 头尾
+protocol SequenceAble {
+    associatedtype Node
+    
+    var head: Node? { get }
+    var tail: Node? { get }
+    var isEmpty: Bool { get }
+    
+    func insert(_ val: Int)
+    func remove(_ node: Node)
+    func get(_ val: Int) -> Node
+}
+
+class LinkList: SequenceAble {
+    var isEmpty: Bool {
+        return head == nil
+    }
+    
+    var head: Node?
+    var tail: Node?
+    
+    class Node {
+        var value: Int
+        var next: Node?
+        
+        init(_ value: Int) {
+            self.value = value
+        }
+    }
+    
+    init() {
+        
+    }
+    
+    func insert(_ val: Int) {
+        
+    }
+    
+    func remove(_ node: LinkList.Node) {
+        if node == tail {
+            
+        }
+    }
+    
+    func get(_ val: Int) -> LinkList.Node {
+        
+    }
+}
