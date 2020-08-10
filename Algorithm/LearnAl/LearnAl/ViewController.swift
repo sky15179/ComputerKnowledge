@@ -32,10 +32,58 @@ class ViewController: UIViewController {
 //        print(Solution().isMatch("aab", "c*a*b"))
 //        print(Solution().isSymmetric([1,2,2,3,4,4,3]))
 //        print(Solution().buildTree([3,9,20,15,7], [9,3,15,20,7]))
+        print(Solution().minWindow("abc", "ab"))
     }
 }
 
 class Solution {
+    func minWindow(_ s: String, _ t: String) -> String {
+        guard t.count <= s.count else { return "" }
+        var window: [String: Int] = [:]
+        var need: [String: Int] = [:]
+        for c in t {
+            need[String(c)] = 1 + (need[String(c)] ?? 0)
+        }
+        var left = 0
+        var right = 0
+        var start = 0
+        var len = Int.max
+        var valid = 0
+
+        while right < s.count {
+            let c = s[right]
+            right += 1
+            if need[c] ?? 0 >= 1 {
+                window[c] = 1 + (window[c] ?? 0)
+                if window[c] == need[c] {
+                    valid += 1
+                }
+            }
+            
+            while valid == need.count {
+                if right - left < len {
+                    start = left
+                    len = right - left
+                }
+                let d = s[left]
+                left += 1
+                if need[d] ?? 0 >= 1 {
+                    if window[d] == need[d] {
+                        valid -= 1
+                    }
+                    window[d] = (window[d] ?? 0) - 1
+                }
+            }
+            
+        }
+        var res = ""
+        if len == 1 {
+            res = s[start]
+        } else if len != Int.max {
+            res = s[start...(start + len - 1)]
+        }
+        return len == Int.max ? "" : res
+    }
     
     func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
         guard preorder.count > 0 && inorder.count > 0 else { return nil }

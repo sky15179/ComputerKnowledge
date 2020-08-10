@@ -257,3 +257,4 @@ class LinkList: SequenceAble {
         
     }
 }
+

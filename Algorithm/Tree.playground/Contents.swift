@@ -1,68 +1,4 @@
-//: A UIKit based Playground for presenting user interface
-
-public class ListNode {
-     public var val: Int
-     public var next: ListNode?
-     public init(_ val: Int) {
-         self.val = val
-         self.next = nil
-     }
- }
-
-//public class TreeNode {
-//    public var val: Int
-//    public var left: TreeNode?
-//    public var right: TreeNode?
-//    public init(_ val: Int) {
-//        self.val = val
-//        self.left = nil
-//        self.right = nil
-//    }
-//}
-
-//
-//class Find {
-//    static func dfs(root: TreeNode?, target: TreeNode) {
-//
-//    }
-//
-//    static func dfs2(root: TreeNode?, target: TreeNode) -> Bool {
-//        guard let root = root else { return false }
-//        var nodeStack: [TreeNode] = []
-//        nodeStack.append(root)
-//        while !nodeStack.isEmpty {
-//            var node = nodeStack.popLast()
-//            if let left = node?.left {
-//                nodeStack.append(left)
-//            }
-//            if let right = node?.right {
-//                nodeStack.append(right)
-//            }
-//        }
-//        return false
-//    }
-//
-//    static func bfs(root: TreeNode?) {
-//
-//    }
-//}
-//
-//var set = Set<Int>()
-
-var mutableArray = [1,2,3]
-mutableArray.count
-for _ in mutableArray {
-    mutableArray.removeLast()
-}
-mutableArray.count
-enum Either<T, V> {
-  case Left(T)
-  case Right(V)
-}
-
-//二叉树相关问题的两种解题思路：自顶向下（前序遍历）: 快速排序，自底向上（后序遍历）：归并排序
-
-var arr = [1,2,3]
+//: A UIKit based Playground for presenting user interfacec
 
 public class TreeNode {
     public var val: Int
@@ -74,6 +10,32 @@ public class TreeNode {
         self.right = nil
     }
 }
+
+protocol TreeAble {
+    
+}
+
+class Tree {
+    private(set) var root: TreeNode?
+    
+    init() {
+        
+    }
+}
+
+//二叉树
+class BinaryTree {
+    
+}
+
+//MARK: 二叉树常用操作: dfs，bfs
+
+//大小堆
+
+//MARK: 问题
+
+//二叉树相关问题的两种解题思路：自顶向下（前序遍历）: 快速排序，自底向上（后序遍历）：归并排序
+var arr = [1,2,3]
 
 func lowestCommonAncestor(_ root: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> TreeNode? {
     //问题是从子节点开始向上递推出结果所以是后序遍历
