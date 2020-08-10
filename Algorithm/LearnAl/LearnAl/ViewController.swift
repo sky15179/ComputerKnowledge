@@ -10,33 +10,93 @@ import UIKit
 
 
 public class TreeNode {
-     public var val: Int
-     public var left: TreeNode?
-     public var right: TreeNode?
-     public init(_ val: Int) {
-         self.val = val
-         self.left = nil
-         self.right = nil
-     }
+    public var val: Int
+    public var left: TreeNode?
+    public var right: TreeNode?
+    public init(_ val: Int) {
+        self.val = val
+        self.left = nil
+        self.right = nil
+    }
 }
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-//        print(Solution().reversePairs([7,5,6,4]))
-//        print(Solution().minPathSum([[1,3,1],[1,5,1],[4,2,1]]))
-//        print(Solution().coinChange([1], 1))
-//        print(Solution().maxProfit([7,1,5,3,6,4]))
-//    print(Solution().minimumTotal([[-10]]))
-//        print(Solution().isMatch("aab", "c*a*b"))
-//        print(Solution().isSymmetric([1,2,2,3,4,4,3]))
-//        print(Solution().buildTree([3,9,20,15,7], [9,3,15,20,7]))
-        print(Solution().minWindow("abc", "ab"))
+        //        print(Solution().reversePairs([7,5,6,4]))
+        //        print(Solution().minPathSum([[1,3,1],[1,5,1],[4,2,1]]))
+        //        print(Solution().coinChange([1], 1))
+        //        print(Solution().maxProfit([7,1,5,3,6,4]))
+        //    print(Solution().minimumTotal([[-10]]))
+        //        print(Solution().isMatch("aab", "c*a*b"))
+        //        print(Solution().isSymmetric([1,2,2,3,4,4,3]))
+        //        print(Solution().buildTree([3,9,20,15,7], [9,3,15,20,7]))
+//        print(Solution().minWindow("abc", "ab"))
+//        print(Solution().findAnagrams("cbaebabacd", "abc"))
+        print(Solution().lengthOfLongestSubstring(""))
     }
 }
 
 class Solution {
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        var window: [String: Int] = [:]
+        var res = 0
+        var right = 0
+        var left = 0
+        while right < s.count {
+            let c = s[right]
+            right += 1
+            window[c] = 1 + (window[c] ?? 0)
+            while window[c] ?? 0 > 1 {
+                let d = s[left]
+                left += 1
+                window[d] = (window[d] ?? 0) - 1
+            }
+            res = max(res, right - left)
+        }
+        return res
+    }
+    
+    func findAnagrams(_ s: String, _ p: String) -> [Int] {
+        guard p.count <= s.count else { return [] }
+        var window: [String: Int] = [:]
+        var need: [String: Int] = [:]
+        for c in p {
+            need[String(c)] = 1 + (need[String(c)] ?? 0)
+        }
+        var left = 0
+        var right = 0
+        var valid = 0
+        var res: [Int] = []
+        
+        while right < s.count {
+            let c = s[right]
+            right += 1
+            if need[c] ?? 0 >= 1 {
+                window[c] = 1 + (window[c] ?? 0)
+                if window[c] == need[c] {
+                    valid += 1
+                }
+            }
+            
+            while right - left >= p.count {
+                if valid == p.count {
+                    res.append(left)
+                }
+                let d = s[left]
+                left += 1
+                if need[d] ?? 0 >= 1 {
+                    if window[d] == need[d] {
+                        valid -= 1
+                    }
+                    window[d] = (window[d] ?? 0) - 1
+                }
+            }
+        }
+        return res
+    }
+    
     func minWindow(_ s: String, _ t: String) -> String {
         guard t.count <= s.count else { return "" }
         var window: [String: Int] = [:]
@@ -49,7 +109,7 @@ class Solution {
         var start = 0
         var len = Int.max
         var valid = 0
-
+        
         while right < s.count {
             let c = s[right]
             right += 1
@@ -89,7 +149,7 @@ class Solution {
         guard preorder.count > 0 && inorder.count > 0 else { return nil }
         return helper(preorder, preStart: 0, preEnd: preorder.count - 1, inorder, inStart: 0, inEnd: inorder.count - 1)
     }
-
+    
     func helper(_ preorder: [Int], preStart: Int, preEnd: Int, _ inorder: [Int], inStart: Int, inEnd: Int) -> TreeNode? {
         if preStart == preEnd { return nil }
         let root = TreeNode(preorder[preStart])
@@ -103,19 +163,19 @@ class Solution {
     
     
     var path: [Int] = []
-
+    
     func hasPathSum(_ root: TreeNode?, _ sum: Int) -> Bool {
         //分类：回溯，找出满足条件的第一个解然后退出
         guard let root = root else { return false }
         return backTrack(root, sum)
     }
-
+    
     func backTrack(_ root: TreeNode?, _ sum: Int) -> Bool {
         guard let root = root else { return false }
         var newSum = sum
         //选择
         path.append(root.val)
-
+        
         //状态变化操作
         newSum -=  root.val
         //终止条件
@@ -139,7 +199,7 @@ class Solution {
         }
         return true
     }
-
+    
     func bfs(_ root: TreeNode?) -> [[Int]] {
         guard let root = root else { return [] }
         var queue: [TreeNode] = []
@@ -162,7 +222,7 @@ class Solution {
         }
         return res
     }
-
+    
     func isReveredArray(_ nums: [Int]) -> Bool {
         var left = 0
         var right = nums.count - 1
@@ -207,26 +267,26 @@ class Solution {
     }
     
     func maxProfit(_ prices: [Int]) -> Int {
-          //状态1：所有价格，状态2：剩下的价格
-          //求两状态差值，每次记录更大值
-          //使用状态数组即可
-          //最后的结果是选出dp数组中最大值
-          //到这步都是回溯的解决
-          //动态规划的优化：状态累计的方程是？
-          var dp: [Int] = Array(repeating: 0, count: prices.count + 1) //这里如果有价格为状态的情况需要特殊处理，可以通过 + 1 构建哨兵来排除特殊情况
-          for i in 0...prices.count - 1 {
-              for j in i...prices.count - 1 {
-                  if prices[j] - prices[i] > 0 {
-                      dp[i] = Swift.max(prices[j] - prices[i], dp[i])
-                  }
-              }
-          }
-          var maxValue = 0
-          for i in dp {
-              maxValue = Swift.max(i, maxValue)
-          }
-          return maxValue
-      }
+        //状态1：所有价格，状态2：剩下的价格
+        //求两状态差值，每次记录更大值
+        //使用状态数组即可
+        //最后的结果是选出dp数组中最大值
+        //到这步都是回溯的解决
+        //动态规划的优化：状态累计的方程是？
+        var dp: [Int] = Array(repeating: 0, count: prices.count + 1) //这里如果有价格为状态的情况需要特殊处理，可以通过 + 1 构建哨兵来排除特殊情况
+        for i in 0...prices.count - 1 {
+            for j in i...prices.count - 1 {
+                if prices[j] - prices[i] > 0 {
+                    dp[i] = Swift.max(prices[j] - prices[i], dp[i])
+                }
+            }
+        }
+        var maxValue = 0
+        for i in dp {
+            maxValue = Swift.max(i, maxValue)
+        }
+        return maxValue
+    }
     
     //零钱兑换
     func coinChange(_ coins: [Int], _ amount: Int) -> Int {
@@ -258,57 +318,57 @@ class Solution {
                 }
             }
         }
-    
+        
         return dpArr[grid.count - 1][grid[0].count - 1]
     }
-
-//    func reversePairs(_ nums: [Int]) -> Int {
-//        guard nums.count > 1 else { return 0 }
-//        var result = 0
-//
-//        //分解
-//        func mergeSort2(arr: [Int]) -> [Int] {
-//            guard arr.count > 1 else { return arr }
-//            let mid = arr.count / 2
-//            let larr = mergeSort2(arr: Array(arr[0..<mid]))
-//            let rarr = mergeSort2(arr: Array(arr[mid..<arr.count]))
-//            return merge(leftArr: larr, rightArr: rarr)
-//        }
-//
-//        //合并
-//        func merge(leftArr: [Int], rightArr: [Int]) -> [Int] {
-//            var i = 0
-//            var j = 0
-//            var resultArr: [Int] = []
-//
-//            while i < leftArr.count && j < rightArr.count {
-//                if leftArr[i] <= rightArr[j] {
-//                    resultArr.append(leftArr[i])
-//                    i += 1
-//                } else {
-//                    //记录逆序对，当右数组元素大于左数组元素, 左边中剩下都是逆序对的
-//                    result += leftArr.count - i
-//                    resultArr.append(rightArr[j])
-//                    j += 1
-//                }
-//            }
-//
-//            while i < leftArr.count {
-//                resultArr.append(leftArr[i])
-//                i += 1
-//            }
-//
-//            while j < rightArr.count {
-//                resultArr.append(rightArr[j])
-//                j += 1
-//            }
-//            return resultArr
-//        }
-//
-//        _ = mergeSort2(arr: nums)
-//
-//        return result
-//    }
+    
+    //    func reversePairs(_ nums: [Int]) -> Int {
+    //        guard nums.count > 1 else { return 0 }
+    //        var result = 0
+    //
+    //        //分解
+    //        func mergeSort2(arr: [Int]) -> [Int] {
+    //            guard arr.count > 1 else { return arr }
+    //            let mid = arr.count / 2
+    //            let larr = mergeSort2(arr: Array(arr[0..<mid]))
+    //            let rarr = mergeSort2(arr: Array(arr[mid..<arr.count]))
+    //            return merge(leftArr: larr, rightArr: rarr)
+    //        }
+    //
+    //        //合并
+    //        func merge(leftArr: [Int], rightArr: [Int]) -> [Int] {
+    //            var i = 0
+    //            var j = 0
+    //            var resultArr: [Int] = []
+    //
+    //            while i < leftArr.count && j < rightArr.count {
+    //                if leftArr[i] <= rightArr[j] {
+    //                    resultArr.append(leftArr[i])
+    //                    i += 1
+    //                } else {
+    //                    //记录逆序对，当右数组元素大于左数组元素, 左边中剩下都是逆序对的
+    //                    result += leftArr.count - i
+    //                    resultArr.append(rightArr[j])
+    //                    j += 1
+    //                }
+    //            }
+    //
+    //            while i < leftArr.count {
+    //                resultArr.append(leftArr[i])
+    //                i += 1
+    //            }
+    //
+    //            while j < rightArr.count {
+    //                resultArr.append(rightArr[j])
+    //                j += 1
+    //            }
+    //            return resultArr
+    //        }
+    //
+    //        _ = mergeSort2(arr: nums)
+    //
+    //        return result
+    //    }
     
     //正则表达式匹配
     func isMatch(_ s: String, _ p: String) -> Bool {
@@ -317,11 +377,11 @@ class Solution {
          1. p[j] == s[i] : dp[i][j] = dp[i - 1][j - 1]
          2. p[j] == "." : dp[i][j] = dp[i - 1][j - 1]
          3. p[j] == "*":
-                        (1). p[j - 1] != s[i] : dp[i][j] = dp[i][j - 2]
-                        (2). p[j - 1] == s[i] || p[j - 1] == ".":
-                                                a.dp[i][j] = dp[i - 1][j]
-                                                b.dp[i][j] == s[i][j - 1]
-                                                c.dp[i][j] == s[i][j - 2]
+         (1). p[j - 1] != s[i] : dp[i][j] = dp[i][j - 2]
+         (2). p[j - 1] == s[i] || p[j - 1] == ".":
+         a.dp[i][j] = dp[i - 1][j]
+         b.dp[i][j] == s[i][j - 1]
+         c.dp[i][j] == s[i][j - 2]
          */
         //dp = d[i - 1][j - 1] + (si 对比 pj)
         guard s.count > 0 && p.count > 0 else {
