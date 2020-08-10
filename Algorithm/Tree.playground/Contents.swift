@@ -30,6 +30,23 @@ class BinaryTree {
 
 //MARK: 二叉树常用操作: dfs，bfs
 
+extension BinaryTree {
+    func dfs(_ root: TreeNode?) {
+        dfs(root?.left)
+        print(root?.val)
+        dfs(root?.right)
+    }
+    
+    func bfs() {
+        
+    }
+    
+    //层序遍历
+    func levelSearch() {
+        
+    }
+}
+
 //大小堆
 
 //MARK: 问题
