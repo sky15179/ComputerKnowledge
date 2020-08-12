@@ -117,6 +117,8 @@ class BinaryTree: TreeAble {
         } else if pre?.right === p {
             pre?.right = child
         }
+        
+        //另一种实现：找到节点标记为deleted，使用元素的时候做下判断
     }
     
     func searchByWhile(_ val: Int) -> TreeNode? {
@@ -359,21 +361,116 @@ class Operator {
         }
     }
 }
-//堆：大小堆
+//堆：大小堆, 堆是完全二叉树
 //堆的抽象父类
-//class Heap: TreeAble {
-//    func heapify() {
-//        fatalError("子类实现")
-//    }
-//}
-//
-//class MaxHeap: Heap {
-//
-//}
-//
-//class MinHeap: Heap {
-//
-//}
+class Heap {
+    fileprivate var nodes: [Int] = []
+    private var capacity = 0 //数组实现的核心都会涉及扩容的问题
+    private(set) var count = 0
+    
+    init(capacity: Int) {
+        self.capacity = capacity
+        self.nodes = Array(repeating: -1, count: capacity + 1)
+    }
+    
+    func insert(_ val: Int) {
+        if count >= capacity {
+            print("堆已满")
+            return
+        }
+        count += 1
+        //添加节点
+        nodes[count] = val
+        bottomToTopHeapify()
+    }
+    
+    func delete(_ val: Int) {
+        //直接删除涉及的变迁太多，先做置换，然后直接删除根节点即可
+        if count == 0 { return }
+        self.nodes[1] = self.nodes[count]
+        count -= 1
+        topToBottomHeapify(n: count, i: 1)
+    }
+    
+    func bottomToTopHeapify() {
+        fatalError("子类实现")
+    }
+    
+    func topToBottomHeapify(n: Int, i: Int) {
+        fatalError("子类实现")
+    }
+}
+
+class MaxHeap: Heap {
+    //O(1)
+    func getMax() -> Int {
+        return self.count >= 1 ? self.nodes[1] : 0
+    }
+    
+    override func bottomToTopHeapify() {
+        var i = count
+        while i / 2 > 0 && nodes[i] > nodes[i / 2] { //自下向上将节点置换到合适的位置
+            (nodes[i], nodes[i / 2]) = (nodes[i / 2], nodes[i])
+            i = i / 2
+        }
+    }
+    
+    override func topToBottomHeapify(n: Int, i: Int) { //自上向下将节点置换到合适的位置
+        while true {
+            var maxPos = i
+            var cur = i
+            if cur * 2 <= n && self.nodes[cur] < self.nodes[cur * 2] {
+                maxPos = cur * 2
+            }
+            if (cur * 2 + 1) <= n && self.nodes[maxPos] < self.nodes[cur * 2 + 1] {
+                maxPos = cur * 2 + 1
+            }
+            if maxPos == cur { break }
+            self.nodes.swapAt(cur, maxPos)
+            cur = maxPos
+        }
+    }
+}
+
+class MinHeap: Heap {
+    //O(1)
+    func getMin() -> Int {
+        return self.count >= 1 ? self.nodes[1] : 0
+    }
+    
+    override func bottomToTopHeapify() {
+        var i = count
+        while i / 2 > 0 && nodes[i] < nodes[i / 2] { //自下向上将节点置换到合适的位置
+            (nodes[i], nodes[i / 2]) = (nodes[i / 2], nodes[i])
+            i = i / 2
+        }
+    }
+    
+    override func topToBottomHeapify(n: Int, i: Int) { //自上向下将节点置换到合适的位置
+        while true {
+            var maxPos = i
+            var cur = i
+            if cur * 2 <= n && self.nodes[cur] > self.nodes[cur * 2] {
+                maxPos = cur * 2
+            }
+            if (cur * 2 + 1) <= n && self.nodes[maxPos] > self.nodes[cur * 2 + 1] {
+                maxPos = cur * 2 + 1
+            }
+            if maxPos == cur { break }
+            self.nodes.swapAt(cur, maxPos)
+            cur = maxPos
+        }
+    }
+}
+
+//MARK: 堆的应用：堆排序, 有序合并K个有序数组, TopK, 求中位数
+//堆排序
+
+class HeapSolution {
+    func heapSort(arr: [Int]) {
+        
+    }
+}
 
 //MARK: 问题
 
