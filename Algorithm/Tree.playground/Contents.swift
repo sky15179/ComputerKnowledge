@@ -289,11 +289,6 @@ extension BinaryTree {
             }
         }
     }
-    
-    //层序遍历: 最短路径问题，层序遍历问题
-    func levelSearch() {
-        
-    }
 }
 
 //MARK: 二叉树常用操作: 前中后序遍历，二叉树的问题基本都是递归解决，不同的就是前中后序的差异，操作与子节点之间的执行顺序
@@ -324,7 +319,45 @@ class Operator {
         postOrder(root?.right)
         print("\(root?.val ?? 0) ")
     }
+    
+    //层序遍历: 最短路径问题，层序遍历问题，延伸可解决图的最短路径问题（增加个visited来避免走重复路径)
+    func levelSearch(_ root: TreeNode?) {
+        guard let root = root else { return }
+        var q: [TreeNode] = []
+        var step = 0
+        //避免重复访问：图的遍历
+        var visited: [TreeNode] = []
+        q.append(root)
+        while !q.isEmpty {
+            for _ in 0..<q.count {
+                let node = q.removeFirst()
+          
+                //解决目标达成
+//                if target {
+//                    return step
+//                }
+                
 
+                if let l = node.left {
+                    q.append(l)
+                }
+                
+                if let r = node.right {
+                    q.append(r)
+                }
+               
+                //多叉的遍历添加
+//                for node in cur.nodes {
+//                    if !visited.contains(node) {
+//                        q.append(node)
+//                        visited.append(node)
+//                    }
+//                }
+            }
+            //解决深度相关问题
+            step += 1
+        }
+    }
 }
 //堆：大小堆
 //堆的抽象父类
