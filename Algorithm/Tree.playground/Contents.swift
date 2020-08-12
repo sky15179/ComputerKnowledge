@@ -14,7 +14,7 @@ public class TreeNode {
 protocol TreeAble {
     func insert(_ val: Int)
     func delete(_ val: Int)
-    func search(_ val: Int) -> TreeNode?
+    func search(_ node: TreeNode?, _ val: Int) -> TreeNode?
 }
 
 protocol TreeEnumerAble {
@@ -119,7 +119,7 @@ class BinaryTree: TreeAble {
         }
     }
     
-    func search(_ val: Int) -> TreeNode? {
+    func searchByWhile(_ val: Int) -> TreeNode? {
         if let p = root, val == p.val {
             return root
         }
@@ -131,8 +131,131 @@ class BinaryTree: TreeAble {
         }
         return nil
     }
+    
+    //递归查找
+    func search(_ node: TreeNode?, _ val: Int) -> TreeNode? {
+        guard let node = node else { return nil }
+        if val > node.val {
+            return search(node.right, val)
+        } else if val < node.val {
+            return search(node.left, val)
+        } else {
+            return root
+        }
+    }
 }
 
+//MARK: 二叉树常用操作: 现查找二叉查找树中某个节点的后继、前驱节点，实现二叉树前、中、后序以及按层遍历
+protocol BinaryTreeAble {
+    func findMin(_ node: TreeNode?) -> TreeNode?
+    func findMax(_ node: TreeNode?) -> TreeNode?
+    func getPreNode(_ node: TreeNode?, _ val: Int) -> TreeNode?
+    func getNextNode(_ node: TreeNode?, _ val: Int) -> TreeNode?
+}
+
+extension BinaryTreeAble where Self: BinaryTree {
+    //辅助方法：查找父节点和最后一个右拐节点
+    func getPNode(_ node: TreeNode?, _ val: Int) -> (result: TreeNode?, parent: TreeNode?, firstRightParent: TreeNode?) {
+        guard let node = node else {
+            return (nil, nil, nil)
+        }
+        var nNode: TreeNode? = node
+        var parent: TreeNode? = nil
+        var firstRightParent: TreeNode? = nil
+        while nNode != nil {
+            if nNode?.val ?? 0 == val {
+                return (nNode, parent, firstRightParent)
+            }
+            parent = nNode
+            if val > nNode?.val ?? 0 {
+                nNode = nNode?.left
+            } else {
+                firstRightParent = nNode
+                nNode = nNode?.right
+            }
+        }
+        return (nil, nil, nil)
+    }
+    
+    func getNNode(_ node: TreeNode?, _ val: Int) -> (result: TreeNode?, parent: TreeNode?, firstLeftParent: TreeNode?) {
+        guard let node = node else {
+            return (nil, nil, nil)
+        }
+        var nNode: TreeNode? = node
+        var parent: TreeNode? = nil
+        var firstLeftParent: TreeNode? = nil
+        while nNode != nil {
+            if nNode?.val ?? 0 == val {
+                return (nNode, parent, firstLeftParent)
+            }
+            parent = nNode
+            if val > nNode?.val ?? 0 {
+                firstLeftParent = nNode
+                nNode = nNode?.left
+            } else {
+                nNode = nNode?.right
+            }
+        }
+        return (nil, nil, nil)
+    }
+}
+
+extension BinaryTree: BinaryTreeAble {
+    func getPreNode(_ node: TreeNode?, _ val: Int) -> TreeNode? {
+        guard let node = node else { return nil }
+        let (result, parent, firstRightParent) = getPNode(node, val)
+        if result == nil { return nil }
+        if result?.left != nil {
+            return findMax(result?.left)
+        }
+        
+        if parent == nil || (parent != nil && firstRightParent == nil) {
+            return nil
+        }
+        
+        if result === parent?.right {
+            return parent
+        } else {
+            return firstRightParent
+        }
+    }
+    
+    func getNextNode(_ node: TreeNode?, _ val: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+        let (result, parent, firstLeftParent) = getNNode(root, val)
+        if result == nil { return nil }
+        if result?.right != nil {
+            return findMin(result?.right)
+        }
+        if parent == nil || (parent != nil && firstLeftParent == nil) {
+            return nil
+        }
+        
+        if result === parent?.left {
+            return parent
+        } else {
+            return firstLeftParent
+        }
+    }
+    
+    func findMin(_ node: TreeNode?) -> TreeNode? {
+        guard let node = node else { return nil }
+        if node.left == nil {
+            return root
+        } else {
+            return findMin(node.left)
+        }
+    }
+    
+    func findMax(_ node: TreeNode?) -> TreeNode? {
+        guard let node = node else { return nil }
+        if node.right == nil {
+            return root
+        } else {
+            return findMax(node.right)
+        }
+    }
+}
 
 //MARK: 二叉树常用操作: dfs，bfs，回溯，解决搜索和
 
@@ -175,16 +298,31 @@ extension BinaryTree {
 
 //MARK: 二叉树常用操作: 前中后序遍历，二叉树的问题基本都是递归解决，不同的就是前中后序的差异，操作与子节点之间的执行顺序
 class Operator {
-    func preOrder() {
-        
+    func preOrder(_ root: TreeNode?) {
+        guard root != nil else {
+            return
+        }
+        print("\(root?.val ?? 0) ")
+        preOrder(root?.left)
+        preOrder(root?.right)
     }
 
-    func inOrder() {
-        
+    func inOrder(_ root: TreeNode?) {
+        guard root != nil else {
+            return
+        }
+        inOrder(root?.left)
+        print("\(root?.val ?? 0) ")
+        inOrder(root?.right)
     }
     
-    func postOrder() {
-        
+    func postOrder(_ root: TreeNode?) {
+        guard root != nil else {
+            return
+        }
+        postOrder(root?.left)
+        postOrder(root?.right)
+        print("\(root?.val ?? 0) ")
     }
 
 }
