@@ -361,7 +361,7 @@ class Operator {
         }
     }
 }
-//堆：大小堆, 堆是完全二叉树
+//堆：大小堆, 堆是完全二叉树, 结构应用：优先队列
 //堆的抽象父类
 class Heap {
     fileprivate var nodes: [Int] = []
@@ -460,6 +460,29 @@ class MinHeap: Heap {
             self.nodes.swapAt(cur, maxPos)
             cur = maxPos
         }
+    }
+}
+
+//优先队列
+class Priority {
+    var miniHeap: MinHeap
+    var capacity: Int
+    
+    init(capacity: Int) {
+        miniHeap = MinHeap(capacity: capacity)
+        self.capacity = capacity
+    }
+    
+    func enqueue(value: Int) {
+        if miniHeap.count < self.capacity {
+            miniHeap.insert(value)
+        } else {
+            
+        }
+    }
+    
+    func dequeue() -> Int {
+        return 0
     }
 }
 
