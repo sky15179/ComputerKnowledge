@@ -482,7 +482,7 @@ class Priority {
     }
     
     func dequeue() -> Int {
-        return 0
+        return miniHeap.getMin()
     }
 }
 
