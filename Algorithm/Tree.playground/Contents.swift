@@ -501,6 +501,13 @@ class PriorityQueue {
         return result
     }
     
+    func peek() -> Int? {
+        if self.size == 0 {
+            return nil
+        }
+        return queue[1]
+    }
+    
     private func shiftUp() {
         var i = size
         //注意，因为是从1位置开始m，所以左节点 = 2 * n,右节点 =2 * n + 1
@@ -544,6 +551,7 @@ class HeapSolution {
             }
         }
         
+        //大堆
         func heapify(arr: inout [Int], n: Int, i: Int) {
             var cur = i
             var maxPos = i
@@ -567,6 +575,38 @@ class HeapSolution {
             j -= 1
             heapify(arr: &arr, n: j, i: 1)
         }
+    }
+    
+    func topK(k: Int, arr: [Int]) {
+        let q = PriorityQueue(capacity: k)
+        if k < arr.count {
+            for i in 0..<k {
+                q.enqueue(value: arr[i])
+            }
+            for j in k...arr.count {
+                if arr[j] > q.peek() ?? 0 {
+                    q.dequeue()
+                    q.enqueue(value: arr[j])
+                }
+            }
+        } else {
+            for num in arr {
+                q.enqueue(value: num)
+            }
+        }
+    }
+    
+    func mergeKArr(arr: [[Int]]) {
+        guard  arr.count > 0 else {
+            return
+        }
+        var queue = PriorityQueue(capacity: arr.count)
+        for nums in arr {
+            if nums.count > 0 {
+                queue.enqueue(value: nums[0])
+            }
+        }
+        
     }
 }
 
