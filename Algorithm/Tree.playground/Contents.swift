@@ -463,35 +463,110 @@ class MinHeap: Heap {
     }
 }
 
-//优先队列
-class Priority {
-    var miniHeap: MinHeap
+//优先队列: （是什么）队列顶部始终排着优先级最高的元素
+//为什么：大的应用：赫夫曼编码、图的最短路径、最小生成树算法
+//为什么：小的应用 - 合并有序小文件
+//怎么做：就是实现顶堆，关键在插入的上浮和删除的下沉操作的实现
+//上浮就是将元素放在尾部不断和上一个节点做对比交换
+//下沉就是现将队列的首尾交换，然后从根节点开始不断向下与两个节点做对比后进行置换
+class PriorityQueue {
+    var queue: [Int] = []
     var capacity: Int
+    private(set) var size = 0
     
     init(capacity: Int) {
-        miniHeap = MinHeap(capacity: capacity)
+        queue = Array(repeating: -1, count: capacity + 1)
         self.capacity = capacity
     }
     
     func enqueue(value: Int) {
-        if miniHeap.count < self.capacity {
-            miniHeap.insert(value)
-        } else {
-            
+        if size == 0 {
+            queue.append(value)
+        }
+        size += 1
+        shiftUp()
+    }
+
+    func dequeue() -> Int? {
+        if self.size == 0 {
+            return nil
+        }
+        size -= 1
+        queue[1] = queue[size]
+        let result = queue[1]
+        //重新堆化
+        if size > 0 {
+            shiftDown(n: size, i: 1)
+        }
+        return result
+    }
+    
+    private func shiftUp() {
+        var i = size
+        //注意，因为是从1位置开始m，所以左节点 = 2 * n,右节点 =2 * n + 1
+        //如果是从0开始则应该是左节点 = 2 * n + 1,右节点 =2 * n + 2
+        while i / 2 > 0 && queue[i] < queue[i / 2] { //自下向上将节点置换到合适的位置
+            (queue[i], queue[i / 2]) = (queue[i / 2], queue[i])
+            i = i / 2
         }
     }
     
-    func dequeue() -> Int {
-        return miniHeap.getMin()
+    private func shiftDown(n: Int, i: Int) {
+        var cur = i
+        var maxPos = i
+        while true {
+            if queue[maxPos] > queue[cur * 2] && cur * 2 <= n {
+                maxPos = cur * 2
+            }
+            
+            if queue[maxPos] > queue[cur * 2 + 1] && cur * 2 + 1 <= n {
+                maxPos = cur * 2 + 1
+            }
+            if cur == maxPos {
+                break
+            }
+            self.queue.swapAt(cur, maxPos)
+            cur = maxPos
+        }
     }
 }
 
 //MARK: 堆的应用：堆排序, 有序合并K个有序数组, TopK, 求中位数
-//堆排序
+//堆排序:
 
 class HeapSolution {
-    func heapSort(arr: [Int]) {
+    func heapSort(arr: inout [Int]) {
+        func buildHeap() {
+            var i = arr.count / 2
+            while i >= 1 {
+                heapify(arr: &arr, n: arr.count, i: 1)
+                i -= 1
+            }
+        }
         
+        func heapify(arr: inout [Int], n: Int, i: Int) {
+            var cur = i
+            var maxPos = i
+            while true {
+                if cur * 2 <= n && arr[cur * 2] > arr[cur] {
+                    maxPos = cur * 2
+                }
+                if cur * 2 + 1 <= n && arr[cur * 2 + 1] > arr[maxPos] {
+                    maxPos = cur * 2 + 1
+                }
+                if cur == maxPos { break }
+                arr.swapAt(cur, maxPos)
+                cur = maxPos
+            }
+        }
+    
+        buildHeap()
+        var j = arr.count
+        while j > 1 {
+            arr.swapAt(1, j)
+            j -= 1
+            heapify(arr: &arr, n: j, i: 1)
+        }
     }
 }
 
