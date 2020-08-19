@@ -596,19 +596,35 @@ class HeapSolution {
         }
     }
     
-    func mergeKArr(arr: [[Int]]) {
-        guard  arr.count > 0 else {
-            return
+    //优先队列
+    func mergeKLists2(_ lists: [ListNode?]) -> ListNode? {
+        guard lists.count > 0 else {
+            return nil
         }
-        var queue = PriorityQueue(capacity: arr.count)
-        for nums in arr {
-            if nums.count > 0 {
-                queue.enqueue(value: nums[0])
-            }
+        var queue = PriorityQueue(capacity: lists.count)
+        for node in lists {
+                queue.enqueue(value: node?.val ?? 0)
         }
-        
+        var dummy: ListNode? = ListNode(0)
+        var p = dummy
+        while queue.size > 0 {
+            let v = queue.dequeue()
+            p?.next = ListNode(v ?? 0)
+            p = p?.next
+            if p != nil { queue.enqueue(value: p?.next?.val ?? 0) }
+        }
+        return dummy?.next
     }
 }
+
+public class ListNode {
+     public var val: Int
+     public var next: ListNode?
+     public init(_ val: Int) {
+         self.val = val
+         self.next = nil
+     }
+ }
 
 //MARK: 问题
 
