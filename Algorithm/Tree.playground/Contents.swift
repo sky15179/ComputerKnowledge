@@ -639,6 +639,7 @@ class Solution {
         return root
     }
 
+    //路径和
     var path: [Int] = []
     func hasPathSum(_ root: TreeNode?, _ sum: Int) -> Bool {
         //分类：回溯，找出满足条件的第一个解然后退出
@@ -665,6 +666,7 @@ class Solution {
         return false
     }
     
+    //前序中序构建树
     func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
         return helper(preorder, preStart: 0, preEnd: preorder.count - 1, inorder, inStart: 0, inEnd: inorder.count - 1)
     }
@@ -680,6 +682,7 @@ class Solution {
         return root
     }
     
+    //验证二叉树
     var pre = Int.min
     func isValidBST(_ root: TreeNode?) -> Bool {
         guard let root = root else { return true }
@@ -694,6 +697,7 @@ class Solution {
         return isValidBST(root.right)
     }
     
+    //最近公共祖先
     //二叉树相关问题的两种解题思路：自顶向下（前序遍历）: 快速排序，自底向上（后序遍历）：归并排序
     func lowestCommonAncestor(_ root: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> TreeNode? {
         //问题是从子节点开始向上递推出结果所以是后序遍历
