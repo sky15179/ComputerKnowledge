@@ -71,9 +71,30 @@ class MyCircularQueue {
 //并发队列
 
 //优先队列
-class PriorityQueue {
-    //最大堆
-//    var heap
+
+class PriorityQueue<T> {
+    var list: [T] = []
+    
+    func enqueue(_ val: T) {
+        shiftUp()
+    }
+    
+    func dequeue() -> T? {
+        shiftDown()
+        return nil
+    }
+    
+    func compare(l: T, r: T) -> Int {
+        return 1
+    }
+    
+    private func shiftUp() {
+        
+    }
+    
+    private func shiftDown() {
+        
+    }
 }
 
 //数组，循环列表
