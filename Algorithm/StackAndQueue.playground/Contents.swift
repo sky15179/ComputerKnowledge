@@ -169,9 +169,7 @@ class Browser {
     private let forwardStack = Stack1()
     private let backStack = Stack1()
     
-    init() {
-        
-    }
+    init() {}
     
     func push(val: Int) {
         backStack.push(val)
@@ -288,6 +286,7 @@ class LinkList: SequenceAble {
     
     var head: Node?
     var tail: Node?
+    var size = 0
     
     class Node {
         var value: Int
@@ -303,16 +302,27 @@ class LinkList: SequenceAble {
     }
     
     func insert(_ val: Int) {
-        
+        let node = Node(val)
+        if head == nil {
+            head = node
+        } else {
+            head?.next = node
+        }
+        tail = node
+        size += 1
     }
     
-    func remove(_ node: LinkList.Node) {
-        if node === tail {
-            
-        }
+    func removeLast() {
+        
     }
     
     func get(_ val: Int) -> Node? {
         return nil
     }
+}
+
+protocol QueueAble {
+    func enqueue(_ val: Int)
+    func dequeue() -> Int?
+    var isEmpty: Bool { get }
 }
