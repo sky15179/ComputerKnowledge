@@ -165,22 +165,41 @@ class Heap {
 //栈实现浏览器
 
 class Browser {
-    typealias Page = Int
     
     private let forwardStack = Stack1()
     private let backStack = Stack1()
-    
     
     init() {
         
     }
     
-    func back() {
-        
+    func push(val: Int) {
+        backStack.push(val)
     }
     
-    func forward(_ next: Page) {
-        back
+    func back() {
+        if backStack.isEmpty() {
+            print("最后一页")
+        }
+        if let val = backStack.pop() {
+            forwardStack.push(val)
+            print("前进\(val)")
+        } else {
+            print("前进失败")
+        }
+
+    }
+    
+    func forward() {
+        if forwardStack.isEmpty() {
+            print("最后一页")
+        }
+        if let val = forwardStack.pop() {
+            backStack.push(val)
+            print("前进\(val)")
+        } else {
+            print("前进失败")
+        }
     }
 }
 
@@ -223,11 +242,11 @@ class Stack1: StackAble {
 //链
 class Stack2: StackAble {
     func peek() -> Int? {
-        <#code#>
+        return link.head?.value
     }
     
     func isEmpty() -> Bool {
-        return head == nil
+        return link.head == nil
     }
     
     private var link: LinkList
@@ -297,4 +316,3 @@ class LinkList: SequenceAble {
         return nil
     }
 }
-
