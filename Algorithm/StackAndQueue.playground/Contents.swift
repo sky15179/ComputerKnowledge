@@ -191,6 +191,8 @@ class Browser {
 protocol StackAble {
     func push(_ value: Int)
     func pop() -> Int?
+    func peek() -> Int?
+    func isEmpty() -> Bool
 }
 
 //顺序
@@ -201,20 +203,37 @@ class Stack1: StackAble {
     }
     
     func push(_ value: Int) {
+        //这里可能涉及到动态扩容
         arr.append(value)
     }
     
     func pop() -> Int? {
         arr.popLast()
     }
+
+    func peek() -> Int? {
+        return arr[0]
+    }
+    
+    func isEmpty() -> Bool {
+        return arr.count == 0
+    }
 }
 
 //链
 class Stack2: StackAble {
-    private var link = LinkList()
+    func peek() -> Int? {
+        <#code#>
+    }
+    
+    func isEmpty() -> Bool {
+        return head == nil
+    }
+    
+    private var link: LinkList
     
     init() {
-        
+        link = LinkList()
     }
     
     func push(_ value: Int) {
@@ -240,7 +259,7 @@ protocol SequenceAble {
     
     func insert(_ val: Int)
     func remove(_ node: Node)
-    func get(_ val: Int) -> Node
+    func get(_ val: Int) -> Node?
 }
 
 class LinkList: SequenceAble {
@@ -269,13 +288,13 @@ class LinkList: SequenceAble {
     }
     
     func remove(_ node: LinkList.Node) {
-        if node == tail {
+        if node === tail {
             
         }
     }
     
-    func get(_ val: Int) -> LinkList.Node {
-        
+    func get(_ val: Int) -> Node? {
+        return nil
     }
 }
 
