@@ -280,6 +280,10 @@ protocol SequenceAble {
 }
 
 class LinkList: SequenceAble {
+    func remove(_ node: LinkList.Node) {
+        
+    }
+    
     var isEmpty: Bool {
         return head == nil
     }
