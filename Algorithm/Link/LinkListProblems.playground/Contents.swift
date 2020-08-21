@@ -1,8 +1,3 @@
-//: A UIKit based Playground for presenting user interface
-
-import UIKit
-import PlaygroundSupport
-
 public class ListNode {
     public var val: Int
     public var next: ListNode?
@@ -21,28 +16,28 @@ class Solution {
         guard head != nil else { return nil }
         var pre: ListNode? = nil
         var cur = head
-        
+
         while cur != nil {
             let temp = cur?.next
             cur?.next = pre
             pre = cur
             cur = temp
         }
-        
+
         return pre
     }
-    
+
     //递归
-    
+
     func reverseList2(_ head: ListNode?) -> ListNode? {
         if head == nil || head?.next == nil {
             return head
         }
-        
+
         let result = reverseList(head?.next)
         head?.next?.next = head
         head?.next = nil
-        
+
         return result
     }
 }
@@ -67,7 +62,7 @@ func reverseN(_ head: ListNode?, _ n: Int) -> ListNode? {
         successor = head?.next
         return head
     }
-    
+
     let ret = reverseN(head?.next, n-1)
     head?.next?.next = head
     head?.next = successor
@@ -89,7 +84,7 @@ func reverseStr(_ s: inout [Character]) {
 func reverseNum(_ num: Int) -> Int {
     var result = 0
     var num2 = num
-    
+
     while num2 != 0 {
         let pop = num2 % 10
         if result > Int.max || (result == Int.max / 10 && pop > 7) {
@@ -101,7 +96,7 @@ func reverseNum(_ num: Int) -> Int {
         result = result * 10 + pop
         num2 = num2 / 10
     }
-    
+
     return result
 }
 
@@ -112,7 +107,7 @@ func hasCycle(_ head: ListNode?) -> Bool {
     //有环的话双指针一定会相遇，因为有共同节点
     var slow = head
     var fast = head?.next
-    
+
     while slow?.next != nil {
         if slow === fast {
             return true
@@ -131,24 +126,24 @@ func detectCycle(_ head: ListNode?) -> ListNode? {
      快的路径又为: 慢路径 + n倍环长度 f = s + nb, 所以 s = nb，f = 2nb 满路径等于n倍的环长度，其实可以理解为只有当慢路径为n倍环长时快慢指针才能相遇
      当相遇在环中时, 环前步数为k = nb + a， 也就是现在慢指针再走a步就能到环前节点，一个新指针和满指针同时走a步又会再次在环前节点相遇
      */
-    
+
     var slow = head
     var fast = head
-    
+
     while true {
         if slow == nil {
             return nil
         }
         slow = slow?.next
         fast = fast?.next?.next
-        
+
         if slow === fast {
             break
         }
     }
-    
+
     fast = head
-    
+
     while fast?.next != nil {
         if slow === fast {
             break
@@ -181,15 +176,15 @@ func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
         }
         newHead = newHead?.next
     }
-    
+
     if h1 != nil {
         newHead?.next = h1
     }
-    
+
     if h2 != nil {
         newHead?.next = h2
     }
-    
+
     return result?.next
 }
 
@@ -197,7 +192,7 @@ func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
 func mergeTwoLists2(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
     if l1 == nil { return l2 }
     if l2 == nil { return l1 }
-    
+
     if l1?.val ?? 0 < l2?.val ?? 0 {
         l1?.next = mergeTwoLists2(l1?.next, l2)
         return l1
@@ -230,14 +225,14 @@ func getIntersectionNode(_ headA: ListNode?, _ headB: ListNode?) -> ListNode? {
     }
     var h1 = headA
     var h2 = headB
-    
+
     while h1 !== h2 {
         if h1 == nil {
             h1 = headB
         } else {
             h1 = h1?.next
         }
-        
+
         if h2 == nil {
             h2 = headA
         } else {
@@ -254,7 +249,7 @@ func deleteNode(_ head: ListNode?, _ val: Int) -> ListNode? {
     dummy?.next = head
     var pre: ListNode? = dummy
     var cur: ListNode? = dummy?.next
-    
+
     while cur != nil {
         if cur?.val ?? 0 == val {
             pre?.next = cur?.next
@@ -263,7 +258,7 @@ func deleteNode(_ head: ListNode?, _ val: Int) -> ListNode? {
         cur = cur?.next
         pre = pre?.next
     }
-    
+
     return dummy?.next
 }
 //删除重复节点
@@ -303,9 +298,9 @@ func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
         fast = fast?.next
         slow = slow?.next
     }
-    
+
     slow?.next = slow?.next?.next
-    
+
     return dummy?.next
 }
 
@@ -329,7 +324,7 @@ func deleteDuplicates2(_ head: ListNode?) -> ListNode? {
             cur = cur?.next
         }
     }
-    
+
     return dummy?.next
 }
 
@@ -338,7 +333,7 @@ private var temp: ListNode?
 func deleteDuplicates3(_ head: ListNode?) -> ListNode? {
     //终止条件
     if head == nil || head?.next == nil { return head }
-    
+
     let cur = deleteDuplicates2(head?.next)
     if temp == nil {
         temp = cur
@@ -356,12 +351,12 @@ func deleteDuplicates3(_ head: ListNode?) -> ListNode? {
 func middleNode(_ head: ListNode?) -> ListNode? {
     var slow = head
     var fast = head?.next
-    
+
     while fast != nil {
         slow = slow?.next
         fast = fast?.next?.next
     }
-    
+
     if slow?.next?.val ?? 0 == slow?.val ?? 0 {
         return slow?.next
     } else {
@@ -389,7 +384,7 @@ func partition(_ head: ListNode?, _ x: Int) -> ListNode? {
     }
     after?.next = nil
     before?.next = afterHead?.next
-    
+
     return beforeHead?.next
 }
 
@@ -404,7 +399,7 @@ func reorderList(_ head: ListNode?) {
         arr.append(node1)
         node1 = node1?.next
     }
-    
+
     var left = 0
     var right = arr.count - 1
     while left < right {
@@ -426,7 +421,7 @@ func oddEvenList(_ head: ListNode?) -> ListNode? {
     var odd = head
     var even = head?.next
     let evenHead = even
-    
+
     while even != nil && even?.next != nil {
         odd?.next = even?.next
         odd = odd?.next
@@ -441,7 +436,7 @@ func oddEvenList(_ head: ListNode?) -> ListNode? {
 
 func isPalindrome(_ head: ListNode?) -> Bool {
     guard head != nil else { return true}
-    
+
     func reveseList(_ head: ListNode?) -> ListNode? {
         if head == nil { return head }
         let result = reveseList(head?.next)
@@ -449,18 +444,18 @@ func isPalindrome(_ head: ListNode?) -> Bool {
         head?.next = nil
         return result
     }
-    
+
     func secondList(_ head: ListNode?) -> ListNode? {
         var slow = head
         var fast = head
-        
+
         while fast?.next != nil && fast?.next?.next != nil {
             fast = fast?.next?.next
             slow = slow?.next
         }
         return slow
     }
-        
+
     let secHead = secondList(head)
     let reversed = reveseList(secHead?.next)
     var h1 = head
@@ -482,7 +477,7 @@ func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
     if head?.next == nil { return head}
     var oldTail = head
     var total = 1
-    
+
     while oldTail?.next != nil {
         oldTail = oldTail?.next
         total += 1
@@ -495,7 +490,12 @@ func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
     }
     let newHead = newTail?.next
     newTail?.next = nil
-    
+
     return newHead
 }
+
+var res: [[Int]] = []
+res.append([])
+
+var arr = [1,3,4]
 
