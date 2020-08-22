@@ -1,17 +1,90 @@
 //: A UIKit based Playground for presenting user interface
-  
+
 import UIKit
 
 //栈
 
 //队列， 循环队列，阻塞队列，并发队列，优先队列
+//双端队列
+class MyCircularDeque {
+    private var nodes: [Int] = []
+    private var capatiy = 0
+    /** Initialize your data structure here. Set the size of the deque to be k. */
+    init(_ k: Int) {
+        self.capatiy = k
+    }
+    
+    /** Adds an item at the front of Deque. Return true if the operation is successful. */
+    func insertFront(_ value: Int) -> Bool {
+        if self.isFull() { return false }
+        self.nodes.insert(value, at: 0)
+        return true
+    }
+    
+    /** Adds an item at the rear of Deque. Return true if the operation is successful. */
+    func insertLast(_ value: Int) -> Bool {
+        if self.isFull() { return false }
+        self.nodes.insert(value, at: self.nodes.count - 1)
+        return true
+    }
+    
+    /** Deletes an item from the front of Deque. Return true if the operation is successful. */
+    func deleteFront() -> Bool {
+        if self.isEmpty() { return false }
+        self.nodes.removeFirst()
+        return true
+    }
+    
+    /** Deletes an item from the rear of Deque. Return true if the operation is successful. */
+    func deleteLast() -> Bool {
+        if self.isEmpty() { return false }
+        self.nodes.removeLast()
+        return true
+
+    }
+    
+    /** Get the front item from the deque. */
+    func getFront() -> Int {
+        return self.nodes.first ?? 0
+    }
+    
+    /** Get the last item from the deque. */
+    func getRear() -> Int {
+        return self.nodes.last ?? 0
+    }
+    
+    /** Checks whether the circular deque is empty or not. */
+    func isEmpty() -> Bool {
+        return self.nodes.isEmpty
+    }
+    
+    /** Checks whether the circular deque is full or not. */
+    func isFull() -> Bool {
+        return self.capatiy == self.nodes.count
+    }
+}
+
+/**
+ * Your MyCircularDeque object will be instantiated and called as such:
+ * let obj = MyCircularDeque(k)
+ * let ret_1: Bool = obj.insertFront(value)
+ * let ret_2: Bool = obj.insertLast(value)
+ * let ret_3: Bool = obj.deleteFront()
+ * let ret_4: Bool = obj.deleteLast()
+ * let ret_5: Int = obj.getFront()
+ * let ret_6: Int = obj.getRear()
+ * let ret_7: Bool = obj.isEmpty()
+ * let ret_8: Bool = obj.isFull()
+ */
+
+
 //循环队列
 class MyCircularQueue {
     private var arr: [Int]
     private var front = 0
     private var rear = 0
     private var capacity: Int = 0
-
+    
     /** Initialize your data structure here. Set the size of the queue to be k. */
     init(_ k: Int) {
         arr = Array(repeating: 0, count: k)
@@ -46,7 +119,7 @@ class MyCircularQueue {
     
     /** Checks whether the circular queue is empty or not. */
     func isEmpty() -> Bool {
-       return front == rear
+        return front == rear
     }
     
     /** Checks whether the circular queue is full or not. */
@@ -185,7 +258,7 @@ class Browser {
         } else {
             print("前进失败")
         }
-
+        
     }
     
     func forward() {
@@ -227,7 +300,7 @@ class Stack1: StackAble {
     func pop() -> Int? {
         arr.popLast()
     }
-
+    
     func peek() -> Int? {
         return arr[0]
     }
@@ -330,3 +403,129 @@ protocol QueueAble {
     func dequeue() -> Int?
     var isEmpty: Bool { get }
 }
+
+//MARK: 问题
+class Solution {
+    //有效括号
+    func isValid(_ s: String) -> Bool {
+        var stack: [String] = []
+        let lSymbol = "("
+        let rSymbol = ")"
+        let strMap: [String: String] = [rSymbol: lSymbol]
+        for c in s {
+            let cstr = String(c)
+            if strMap.keys.contains(cstr) {
+                let last = stack.popLast()
+                if last != strMap[cstr] {
+                    return false
+                }
+            }
+            if strMap.values.contains(cstr) {
+                stack.append(cstr)
+            }
+        }
+        
+        return stack.isEmpty
+    }
+    
+    //最长有效括号: 栈, 动态规划
+    func longestValidParentheses(_ s: String) -> Int {
+        var maxLength = 0
+        var stack: [Int] = []
+        //为了确保右端必有结束
+        stack.append(-1)
+        let lSymbol = "("
+        let rSymbol = ")"
+        var length = 0
+        for i in 0..<s.count {
+            let cstr = String(c)
+            if cstr == lSymbol {
+                stack.append(i)
+            } else {
+                let j = stack.popLast()
+                if stack.count == 0 {
+                    stack.append(i)
+                } else {
+                    maxLength = Swift.max(maxLength, i - (stack.last ?? 0))
+                }
+            }
+        }
+        
+        return maxLength
+    }
+    
+    //滑动窗口最大值: 进阶要求O(n)
+    //思路1: 队列
+    func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+        guard nums.count > 0, k > 0 else {
+            return []
+        }
+        if k == 1 { return nums }
+        var q: [Int] = []
+        var result: [Int] = []
+        var maxidx = 0
+        func cleanQ(i: Int) {
+            if !q.isEmpty && i - k == (q.first ?? 0) {
+                q.removeFirst()
+            }
+            while !q.isEmpty && nums[i] > nums[q.last ?? 0] {
+                q.removeLast()
+            }
+        }
+    
+        for index in 0..<k {
+            cleanQ(i: index)
+            q.append(index)
+            if let first = q.first {
+                maxidx = first
+            }
+        }
+        
+        result[0] = nums[maxidx]
+        for index in k..<nums.count {
+            cleanQ(i: index)
+            q.append(index)
+            if let first = q.first {
+                result.append(nums[first])
+            }
+        }
+        return result
+    }
+    
+    //双端队列: 两端都可删除, 核心数组实现, adt: frontEnq, rearEnq
+    
+    //爬楼梯
+    var statesMap: [Int: Int] = [:]
+    func climbStairs(_ n: Int) -> Int {
+        return dp(n: n)
+    }
+    
+    func dp(n: Int) -> Int {
+        if statesMap[n] != nil {
+            return statesMap[n] ?? 0
+        }
+        if n == 0 { return  0 }
+        if n == 1 { return  1 }
+        if n == 2 { return  2 }
+        let res = dp(n: n-1) + dp(n: n-2)
+        statesMap[n] = res
+        return res
+    }
+    
+    //爬楼梯: 迭代法
+    func climbStairs2(_ n: Int) -> Int {
+        guard n <= 1 else { return n }
+        if n == 2 { return 2 }
+        var cur = 0
+        var pre = 1
+        var pre2 = 1
+        
+        for _ in 3...n {
+            cur = pre + pre2
+            pre2 = pre
+            pre = cur
+        }
+        return cur
+    }
+}
+
