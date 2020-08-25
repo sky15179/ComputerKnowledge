@@ -6,33 +6,45 @@ class Sort {
     func bubbleSort(_ nums: inout [Int]) {
         //不稳定，出现前后重复交换
         for i in 0...nums.count - 1 {
-            for j in i...nums.count - 1 {
-                if nums[j] > nums[i] {
-                    nums.swapAt(i, j)
+            var flag = false
+            for j in 0...nums.count - i - 1 {
+                if nums[j] > nums[j + 1] {
+                    nums.swapAt(j, j + 1)
+                    flag = true
                 }
             }
+            if !flag { break }
         }
     }
     
     func insertSort(_ nums: [Int]) -> [Int] {
-        var result: [Int] = []
+        var result: [Int] = nums
         for i in 0...nums.count - 1 {
-            for j in i...nums.count - 1 {
-                if nums[j] > nums[i] {
-                    nums.swapAt(i, j)
+            let val = nums[i]
+            var j = i - 1
+            for _ in (0...i - 1).reversed() {
+                if nums[j] > val{
+                    result[j + 1] = result[j]
+                } else {
+                    break
                 }
+                j -= 1
             }
+            result[j + 1] = val
         }
         return result
     }
     
     func selectSort(_ nums: inout [Int]) {
+        var result: [Int] = nums
         for i in 0...nums.count - 1 {
+            var minIndex = i
             for j in i...nums.count - 1 {
-                if nums[j] > nums[i] {
-                    nums.swapAt(i, j)
+                if nums[j] > nums[minIndex] {
+                    minIndex = j
                 }
             }
+            result[i] = nums[minIndex]
         }
     }
     
@@ -127,5 +139,13 @@ class BinarySearch {
         //因为是闭区间需要考虑越界
         if right < 0 || nums[right] != target { return -1 }
         return right
+    }
+}
+
+class Solution {
+    //编程实现 O(n) 时间复杂度内找到一组数据的第 K 大元素
+    //思路：使用partytion函数确定k元素
+    func findK(_ nums: [Int]) -> Int {
+        
     }
 }
