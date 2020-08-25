@@ -188,7 +188,6 @@ class Solution {
             result = p + 1
         } else if p < k  {
 //            result = findK(nums[(p+1)..<nums.count], k: 2k - p)
-            return
         } else {
 //            result = findK(nums[0...(p - 1)], k: p - k)
         }
@@ -208,5 +207,19 @@ class Solution {
         
         nums.swapAt(i, nums[high])
         return i
+    }
+    
+    func mySqrt(_ x: Int) -> Int {
+        var left = 0
+        var right = x / 2 + 1
+        while left < right {
+            let m = (left + right + 1) >> 1
+            if m * m > x {
+                right = m - 1
+            } else {
+                left = m
+            }
+        }
+        return left
     }
 }
