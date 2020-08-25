@@ -36,15 +36,16 @@ class Sort {
     }
     
     func selectSort(_ nums: inout [Int]) {
-        var result: [Int] = nums
         for i in 0...nums.count - 1 {
             var minIndex = i
-            for j in i...nums.count - 1 {
+            for j in i + 1...nums.count - 1 {
                 if nums[j] > nums[minIndex] {
                     minIndex = j
                 }
             }
-            result[i] = nums[minIndex]
+            if minIndex != i {
+                nums.swapAt(i, minIndex)
+            }
         }
     }
     
@@ -90,8 +91,39 @@ class Sort {
     
     //快排：从上往下排序, 核心是找partion位置的函数，
     func quickSort(_ nums: inout [Int]) {
+        func partition2(_ nums: inout [Int]) -> Int {
+            let high = nums.count - 1
+            let p = nums[high]
+            var i = 0
+            for j in 0..<nums.count {
+                if nums[j] <= p {
+                    nums.swapAt(i, j)
+                    i += 1
+                }
+            }
+            
+            nums.swapAt(i, nums[high])
+            return i
+        }
         
+        func partition(_ nums: inout [Int]) -> Int {
+            let pivot = nums.last ?? 0
+            var i = 0
+            for j in 0..<nums.count {
+                if nums[j] < pivot {
+                    nums.swapAt(i, j)
+                    i += 1
+                }
+            }
+            nums.swapAt(i, nums.count - 1)
+            return i
+        }
+        //伪代码： result = quicksort(0...pivot) + quicksort(pivot + 1...count)
+        let pivot = partition(&nums)
+//        quickSort(nums[0...(pivot - 1)])
+//        quickSort(nums[(pivot + 1)..<nums.count])
     }
+    
     
     //高级特定场景优化排序：计数排序
 }
@@ -145,7 +177,36 @@ class BinarySearch {
 class Solution {
     //编程实现 O(n) 时间复杂度内找到一组数据的第 K 大元素
     //思路：使用partytion函数确定k元素
-    func findK(_ nums: [Int]) -> Int {
+    //
+    func findK(_ nums: inout [Int], k: Int) -> Int {
+        guard k <= nums.count - 1 else {
+            return -1
+        }
+        var result = -1
+        let p = partition2(&nums)
+        if p + 1 == k {
+            result = p + 1
+        } else if p < k  {
+//            result = findK(nums[(p+1)..<nums.count], k: 2k - p)
+            return
+        } else {
+//            result = findK(nums[0...(p - 1)], k: p - k)
+        }
+        return nums[result]
+    }
+    
+    func partition2(_ nums: inout [Int]) -> Int {
+        let high = nums.count - 1
+        let p = nums[high]
+        var i = 0
+        for j in 0..<nums.count {
+            if nums[j] <= p {
+                nums.swapAt(i, j)
+                i += 1
+            }
+        }
         
+        nums.swapAt(i, nums[high])
+        return i
     }
 }
