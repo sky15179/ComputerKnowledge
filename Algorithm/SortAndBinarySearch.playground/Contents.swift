@@ -223,3 +223,11 @@ class Solution {
         return left
     }
 }
+
+//var arr = [1, 2, 3]
+//arr.reduce("") { (result, cur) -> String in
+//    return result + "\(cur)"
+//}
+//
+//var set: Set<String> = [] //去重
+//set.insert(<#T##newMember: String##String#>)
