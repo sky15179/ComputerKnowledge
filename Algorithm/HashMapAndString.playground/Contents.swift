@@ -1,5 +1,16 @@
 class MyString {
+    //朴素匹配：可优化，使用hash函数求子串值, 二次遍历直接比对hash值
+    func simple() {
+        
+    }
     
+    func kmp() {
+        
+    }
+    
+    func bm() {
+        
+    }
 }
 
 class HashMapNode {
