@@ -11,6 +11,7 @@ import Network
 import SwiftSocket
 
 let host: NWEndpoint.Host = "127.0.0.1"
+let port: NWEndpoint.Port = 20131
 
 class ViewController: UIViewController {
 
@@ -32,14 +33,35 @@ class Logger {
     }
 }
 
+class SocketUDP {
+    
+}
+
 final class UDP {
+    private var connection = NWConnection(host: host, port: port, using: .udp)
+    
     init() {
-        NWParameters()
-        let fn = NWConnection(host: <#T##NWEndpoint.Host#>, port: <#T##NWEndpoint.Port#>, using: <#T##NWParameters#>)
     }
     
     func send() {
-        
+        let msg = "测试数据"
+        let data = msg.data(using: String.Encoding.utf8)
+        connection.send(content: data, completion: NWConnection.SendCompletion.contentProcessed({ (error) in
+            if error == nil {
+                print("发送成功")
+            } else {
+                print("发送失败")
+            }
+        }))
+    }
+    
+    func listen() {
+        connection.stateUpdateHandler = { newState in
+//            switch newState {
+//            case .
+//            }
+            
+        }
     }
 }
 
