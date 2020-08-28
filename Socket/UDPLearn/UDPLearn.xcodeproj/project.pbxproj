@@ -13,7 +13,23 @@
 		35A64E6924F8DDE1006CF577 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35A64E6724F8DDE1006CF577 /* Main.storyboard */; };
 		35A64E6B24F8DDE2006CF577 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35A64E6A24F8DDE2006CF577 /* Assets.xcassets */; };
 		35A64E6E24F8DDE2006CF577 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35A64E6C24F8DDE2006CF577 /* LaunchScreen.storyboard */; };
+		35A64E7724F8F524006CF577 /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A64E7624F8F524006CF577 /* SwiftSocket.framework */; };
+		35A64E7824F8F524006CF577 /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35A64E7624F8F524006CF577 /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		35A64E7924F8F524006CF577 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				35A64E7824F8F524006CF577 /* SwiftSocket.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		35A64E5E24F8DDE1006CF577 /* UDPLearn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UDPLearn.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -24,6 +40,7 @@
 		35A64E6A24F8DDE2006CF577 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35A64E6D24F8DDE2006CF577 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35A64E6F24F8DDE2006CF577 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35A64E7624F8F524006CF577 /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftSocket.framework; path = Carthage/Build/iOS/SwiftSocket.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35A64E7724F8F524006CF577 /* SwiftSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +60,7 @@
 			children = (
 				35A64E6024F8DDE1006CF577 /* UDPLearn */,
 				35A64E5F24F8DDE1006CF577 /* Products */,
+				35A64E7524F8F524006CF577 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +86,14 @@
 			path = UDPLearn;
 			sourceTree = "<group>";
 		};
+		35A64E7524F8F524006CF577 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35A64E7624F8F524006CF577 /* SwiftSocket.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -77,6 +104,8 @@
 				35A64E5A24F8DDE1006CF577 /* Sources */,
 				35A64E5B24F8DDE1006CF577 /* Frameworks */,
 				35A64E5C24F8DDE1006CF577 /* Resources */,
+				35A64E7924F8F524006CF577 /* Embed Frameworks */,
+				35A64E7A24F8F54C006CF577 /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -132,6 +161,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		35A64E7A24F8F54C006CF577 /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftSocket.framework",
+			);
+			name = Carthage;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [ -f /usr/local/bin/carthage ]; then\n/usr/local/bin/carthage copy-frameworks\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		35A64E5A24F8DDE1006CF577 /* Sources */ = {
@@ -286,6 +337,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ANV3YKEKP6;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = UDPLearn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -304,6 +359,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ANV3YKEKP6;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = UDPLearn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
