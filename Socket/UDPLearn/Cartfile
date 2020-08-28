@@ -1,0 +1,5 @@
+
+git "https://github.com/ReactiveCocoa/ReactiveSwift.git" ~> 6.0.0
+git "https://github.com/SnapKit/SnapKit.git" == 4.0.0
+git "https://github.com/Juanpe/SkeletonView.git" == 1.4.2
+github "Alamofire/Alamofire" "5.0.0-rc.3"
