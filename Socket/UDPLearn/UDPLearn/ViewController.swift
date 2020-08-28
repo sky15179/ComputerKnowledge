@@ -10,6 +10,10 @@ import UIKit
 import Network
 import SwiftSocket
 
+//游戏联机
+//实时视频
+//在线聊天
+
 let host: NWEndpoint.Host = "127.0.0.1"
 let port: NWEndpoint.Port = 20131
 
