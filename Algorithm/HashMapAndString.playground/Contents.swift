@@ -292,3 +292,49 @@ class LinkList {
 
 let arr = [1,2,3]
 arr.enumerated()
+
+class Solution {
+    private var path: [[Int]] = []
+    private var target = ""
+//    private var visited: Set<Position> = Set()
+
+    //矩阵搜索: dfs
+    func exist(_ board: [[Character]], _ word: String) -> Bool {
+        guard board.count > 0, word.count > 0 else { return false }
+        var strs: [String] = []
+        var board2 = board
+        self.target = word
+        for i in 0..<board.count {
+            for j in 0..<board[0].count {
+                if helper(&board2, i, j, 0) { return true }
+            }
+        }
+        return false
+    }
+
+    func helper(_ board: inout [[Character]], _ i: Int, _ j: Int, _ k: Int) -> Bool {
+        if i >= board.count { return false}
+
+        //选择
+        target = target + board[i + 1][j]
+        
+        //退出条件
+        if target == word {
+            return true
+        }
+
+        helper(board, i + 1, j)
+        //不选择
+        target = target + board[i][j + 1]
+               //退出条件
+        if target == word {
+            return true
+        }
+        
+                //四种变化
+        //        i + 1
+        //        i - 1
+        //        j + 1
+        //        j - 1
+        var res = helper(&board, i + 1, j, k + 1) || helper(&board, i - 1, j, k + 1) || helper(&board, i, j + 1, k + 1) || helper(&board, i, j + 1, k + 1)
+}

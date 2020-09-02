@@ -60,14 +60,71 @@ final class UDP {
     }
     
     func listen() {
-        connection.stateUpdateHandler = { newState in
-//            switch newState {
-//            case .
-//            }
-            
+        let  matrix: [[Int]] = []
+        matrix.first?.count
+        let s = ""
+//        guard s.count > 0 else { return "" }
+        let count = s.count
+        var resultCount = 0
+        for char in s {
+            let ele = String(char)
+            if ele == " " {
+                resultCount += 3
+            } else {
+                resultCount += 1
+            }
         }
+        
+        var p1 = count
+        var p2 = resultCount
+        var result = ""
+        
+        result = s + String(repeating: " ", count: resultCount - count)
+        var strs: [String] = []
+        for c in s {
+            strs.append(String(c))
+        }
+
+//        while p1 < p2, p1 >= 0, p2 >= 0 {
+//            let curChar = String(s[p1])
+//            if curChar != " " {
+//                result[p2] = curChar
+//                p1 -= 1
+//                p2 -= 1
+//            } else {
+//                result.replaceSubrange([(p2-2)...p2], with: "%20")
+//                p1 -= 1
+//                p2 -= 3
+//            }
+//        }
+        
+//        connection.stateUpdateHandler = { newState in
+////            switch newState {
+////            case .
+////            }
+//
+//        }
     }
 }
 
 //MARK: SwiftSocket
 
+extension String {
+    
+    subscript(i: Int) -> String {
+        guard i >= 0 && i < count else { return "" }
+        return String(self[index(startIndex, offsetBy: i)])
+    }
+    
+    subscript(range: Range<Int>) -> String {
+        let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) ?? endIndex
+        let higherIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound, limitedBy: endIndex) ?? endIndex
+        return String(self[lowerIndex..<higherIndex])
+    }
+    
+    subscript(range: ClosedRange<Int>) -> String {
+        let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) ?? endIndex
+        let higherIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound + 1, limitedBy: endIndex) ?? endIndex
+        return String(self[lowerIndex..<higherIndex])
+    }
+}
