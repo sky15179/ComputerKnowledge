@@ -493,9 +493,3 @@ func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
 
     return newHead
 }
-
-var res: [[Int]] = []
-res.append([])
-
-var arr = [1,3,4]
-
