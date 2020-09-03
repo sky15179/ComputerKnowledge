@@ -1025,3 +1025,59 @@ extension String {
 
  和动态规划dp函数设计三要素（状态，选择，base情况）抽象上处理核心是一致的
  */
+
+class LeetCode {
+    // 14: 剪绳子, 数学题
+//    func cuttingRope(_ n: Int) -> Int {
+//        if n <= 3 { return n - 1 }
+//        let a = n / 3
+//        let b = n % 3
+//        if b == 0 { return Int(pow(3, a)) }
+//        if b == 1 { return Int(pow(3, a - 1)) * 4 }
+//        return Int(pow(3, a)) * 2
+//    }
+    
+    //16. 数学函数：二分
+    func myPow(_ x: Double, _n: Int) -> Double {
+        if x == 0 { return 0 }
+        var res: Double = 0
+        var cur = x
+        var b: CLong = n
+
+        if b < 0 {
+            cur = 1 / cur
+            b = -b
+        }
+        
+        while b > 0 {
+            if b % 2 == 1 { res *= cur }
+            cur *= cur
+            b >>= 1
+        }
+        return res
+    }
+    
+    //17. 打印从 1 到最大的 n 位数: 考虑极大数，使用字符串完成数字的全排列
+    var res = ""
+    var n2 = 0
+    var num: [String] = []
+    var loop = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    func printNumbers(_ n: Int) -> [Int] {
+        self.n2 = n
+        num = Array(repeating: "", count: n)
+        dfs2(0)
+        return []
+    }
+    
+    func dfs2(_ x: Int) {
+        if x == n2 { //排列全满
+            //添加字符串
+            res = res.appending(num.joined() + ",")
+            return
+        }
+        for c in loop {
+            num[x] = c
+            dfs2(x + 1)
+        }
+    }
+}
