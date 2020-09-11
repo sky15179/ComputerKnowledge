@@ -493,3 +493,46 @@ func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
 
     return newHead
 }
+
+Array((0..<5).reversed())
+let arr = ["1", "2"]
+arr.joined()
+var map: [Int: Int] = [:]
+var maxValue = 0
+var maxKey = 0
+let nums: [Int] = []
+
+for num in nums {
+    if map[num] != nil {
+        map[num]! += 1
+    } else {
+        map[num] = 1
+    }
+}
+map.forEach { (key, value) in
+    if value > maxValue {
+        maxValue = value
+        maxKey = key
+    }
+}
+
+arr.enumerated()
+let str1 = "123"
+let str2 = "2"
+let s3 = str1 + str2
+let r = s3 > str1
+let arr2 = [1, 2, 3]
+let strs = ["a"]
+strs.joined()
+strs.sorted { (x, y) -> Bool in
+    return (x + y) > (y + x)
+}
+let map2: [String: Int] = [:]
+map2.keys.contains("")
+let ra1 = 1..<2
+let a2 = Array(ra1)
+var arr3 = Array(str1.split(separator: " "))
+arr3.reverse()
+arr3.joined()
+arr3.joined(separator: " ")
+arr2.max()
